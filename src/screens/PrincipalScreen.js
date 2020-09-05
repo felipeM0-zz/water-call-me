@@ -1,10 +1,17 @@
 import React from 'react';
-import {SafeAreaView, Text, View, StyleSheet, ScrollView} from 'react-native';
+import {SafeAreaView, Text, View, StyleSheet, FlatList} from 'react-native';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import IconIon from 'react-native-vector-icons/Ionicons';
 import * as Progress from 'react-native-progress';
+import Data from '../data';
 
 const PrincipalScreen = () => {
+  const renderItem = ({item}) => (
+    <View style={styles.vwHistory}>
+      <Text>{item.title}</Text>
+    </View>
+  );
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={{height: 413}}>
@@ -42,11 +49,15 @@ const PrincipalScreen = () => {
         </View>
       </View>
 
-      <ScrollView style={{flex: 1}}>
-        <View style={{alignItems: 'center'}}>
-          <View style={styles.vwHistory} />
-        </View>
-      </ScrollView>
+      <FlatList
+        contentContainerStyle={{
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        data={Data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+      />
     </SafeAreaView>
   );
 };
@@ -126,7 +137,7 @@ const styles = StyleSheet.create({
   },
   vwHistory: {
     height: 55,
-    width: '80%',
+    width: 250,
     marginBottom: 10,
     marginTop: 10,
     borderWidth: 3,
