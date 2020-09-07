@@ -1,14 +1,28 @@
 import React from 'react';
-import {SafeAreaView, Text, View, StyleSheet, FlatList} from 'react-native';
+import {
+  SafeAreaView,
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  TouchableHighlight,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import IconIon from 'react-native-vector-icons/Ionicons';
 import * as Progress from 'react-native-progress';
 import Data from '../data';
 
 const PrincipalScreen = () => {
+  const navigation = useNavigation();
+  const dmsion = Dimensions.get('screen').width;
+
   const renderItem = ({item}) => (
-    <View style={styles.vwHistory}>
-      <Text>{item.title}</Text>
+    <View style={styles.vwHistory(dmsion - 100)}>
+      <Text style={{fontSize: 17, color: '#72dde8', fontWeight: 'bold'}}>
+        {item.title}
+      </Text>
     </View>
   );
 
@@ -16,14 +30,37 @@ const PrincipalScreen = () => {
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={{height: 413}}>
         <View style={styles.headerPrincipal}>
-          <Text style={styles.txtHeaderPrincipal}>Controle de Água</Text>
+          <Text style={[styles.txtHeaderPrincipal, styles.txtShadow]}>
+            Controle de Água
+          </Text>
+          <TouchableHighlight
+            underlayColor="none"
+            onPress={() => navigation.openDrawer()}
+            style={{
+              width: 60,
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+            }}>
+            <IconIon
+              style={{
+                textShadowColor: 'rgba(0, 0, 0, 0.5)',
+                textShadowOffset: {width: -0.5, height: 0.5},
+                textShadowRadius: 1,
+              }}
+              name="menu"
+              size={30}
+              color="#92E4ED"
+            />
+          </TouchableHighlight>
         </View>
         <View style={styles.vwContentPrincipal}>
           <IconF
             name="gear"
             size={25}
             color="#FFFFFF"
-            style={styles.iconGear}
+            style={[styles.iconGear, styles.txtShadow]}
           />
 
           <View style={styles.vwContentPie}>
@@ -34,25 +71,38 @@ const PrincipalScreen = () => {
               color="rgba(146, 228, 237,0.6)"
             />
             <View style={styles.vwBackWhite}>
-              <Text style={styles.txtCenterPrincipal}>0/0ml</Text>
+              <Text style={[styles.txtCenterPrincipal, styles.txtShadow]}>
+                0/0ml
+              </Text>
             </View>
           </View>
 
-          <IconIon
-            name="water"
-            size={70}
-            color="#FFFFFF"
-            style={styles.IconWater}
-          />
+          <TouchableHighlight
+            underlayColor="none"
+            style={{
+              position: 'absolute',
+              right: 20,
+              bottom: 17,
+              alignItems: 'center',
+            }}>
+            <>
+              <Text style={[styles.txtIncremet, styles.txtShadow]}>+200ml</Text>
+              <IconIon
+                name="water"
+                size={70}
+                color="#FFFFFF"
+                style={styles.txtShadow}
+              />
+            </>
+          </TouchableHighlight>
 
-          <Text style={styles.txtHistory}>Histórico</Text>
+          <Text style={[styles.txtHistory, styles.txtShadow]}>Histórico</Text>
         </View>
       </View>
 
       <FlatList
         contentContainerStyle={{
           alignItems: 'center',
-          justifyContent: 'center',
         }}
         data={Data}
         renderItem={renderItem}
@@ -67,15 +117,25 @@ const styles = StyleSheet.create({
     height: 60,
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
   txtHeaderPrincipal: {
     fontSize: 25,
     fontWeight: 'bold',
+    width: '100%',
+    textAlign: 'center',
     color: '#92E4ED',
+  },
+  txtShadow: {
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: {width: -0.5, height: 0.5},
     textShadowRadius: 2,
+  },
+  txtIncremet: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
   vwContentPrincipal: {
     height: 350,
@@ -86,9 +146,6 @@ const styles = StyleSheet.create({
     marginBottom: '20%',
   },
   iconGear: {
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: {width: -0.5, height: 0.5},
-    textShadowRadius: 2,
     position: 'absolute',
     left: 15,
     top: 15,
@@ -102,22 +159,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  IconWater: {
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: {width: -0.5, height: 0.5},
-    textShadowRadius: 2,
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-  },
   txtHistory: {
     fontSize: 20,
     position: 'absolute',
     bottom: 3,
     color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: {width: -0.5, height: 0.5},
-    textShadowRadius: 2,
   },
   vwBackWhite: {
     height: 170,
@@ -131,21 +177,19 @@ const styles = StyleSheet.create({
   txtCenterPrincipal: {
     fontSize: 28,
     color: '#92E4ED',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: {width: -0.5, height: 0.5},
-    textShadowRadius: 2,
   },
-  vwHistory: {
+  vwHistory: (dms) => ({
     height: 55,
-    width: 250,
+    width: dms,
     marginBottom: 10,
     marginTop: 10,
     borderWidth: 3,
     borderRadius: 10,
-    borderColor: '#92E4ED',
-    elevation: 2,
+    borderColor: 'rgba(114, 221, 232, 0.3)',
     backgroundColor: '#FFFFFF',
-  },
+    justifyContent: 'center',
+    alignItems: 'center',
+  }),
 });
 
 export default PrincipalScreen;
