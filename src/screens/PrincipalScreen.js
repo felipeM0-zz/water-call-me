@@ -13,6 +13,7 @@ import IconF from 'react-native-vector-icons/FontAwesome';
 import IconIon from 'react-native-vector-icons/Ionicons';
 import * as Progress from 'react-native-progress';
 import Lottie from 'lottie-react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Data from '../data';
 
 const PrincipalScreen = () => {
@@ -24,7 +25,7 @@ const PrincipalScreen = () => {
   const [valueIncrement, setValueIncrement] = useState(200);
   const [showButtonIncrement, setShowButtonIncrement] = useState(true);
   const [haveHistory, setHaveHistory] = useState(false);
-  const [myData, setMydata] = useState(Data.reverse());
+  const [myData, setMydata] = useState([]);
 
   const renderItem = ({item}) => (
     <View style={styles.vwHistory(dmsion - 100)}>
@@ -34,17 +35,19 @@ const PrincipalScreen = () => {
 
   const EmptyComponent = () => (
     <View style={styles.vwEmpty}>
-      <Text style={[styles.txtEmpty, styles.txtShadow]}>
-        Sem histórico,{'\n'}beba água!
-      </Text>
       <Lottie
         speed={0.3}
         source={require('../images/JSON/circle-water.json')}
         autoPlay
         loop
         autoSize
-        style={styles.lottieEmpty}
+        resizeMode="center"
+        // style={{backgroundColor:'#333333'}} // QUANDO ESTIVER #474747
+        // style={{backgroundColor:'#FFFFFF'}} // QUANDO ESTIVER #FFFFFF
       />
+      <Text style={[styles.txtEmpty, styles.txtShadow]}>
+        Sem histórico,{'\n'}beba água!
+      </Text>
     </View>
   );
 
@@ -68,6 +71,7 @@ const PrincipalScreen = () => {
   return (
     <SafeAreaView style={styles.savContent}>
       <View style={styles.vwWater}>
+        {/* HEADER */}
         <View style={styles.headerPrincipal}>
           <Text style={[styles.txtHeaderPrincipal, styles.txtShadow]}>
             Controle de Água
@@ -84,7 +88,10 @@ const PrincipalScreen = () => {
             />
           </TouchableHighlight>
         </View>
-        <View style={styles.vwContentPrincipal}>
+        {/* CONTAINER PIE */}
+        <LinearGradient
+          colors={['#47bdc9', '#47bdc9', '#92E4ED', 'rgba(190, 178, 237,0.5)']}
+          style={styles.vwContentPrincipal}>
           <IconF
             name="gear"
             size={25}
@@ -98,6 +105,7 @@ const PrincipalScreen = () => {
               borderWidth={0}
               size={190}
               color="rgba(146, 228, 237,0.6)"
+              style={{position: 'absolute'}}
             />
             <View style={styles.vwBackWhite}>
               <Text style={[styles.txtCenterPrincipal, styles.txtShadow]}>
@@ -125,10 +133,12 @@ const PrincipalScreen = () => {
             </TouchableHighlight>
           )}
 
-          <Text style={[styles.txtHistory, styles.txtShadow]}>
-            Histórico ({myData.length}/100)
-          </Text>
-        </View>
+          {myData.length > 0 && (
+            <Text style={[styles.txtHistory, styles.txtShadow]}>
+              Histórico ({myData.length}/100)
+            </Text>
+          )}
+        </LinearGradient>
       </View>
 
       <FlatList
@@ -157,12 +167,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     width: '100%',
     textAlign: 'center',
-    color: '#92E4ED',
+    color: '#7bcbd4',
   },
   txtShadow: {
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: {width: -0.5, height: 0.5},
-    textShadowRadius: 2,
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: {width: -0.8, height: 0.8},
+    textShadowRadius: 1,
   },
   txtIncremet: {
     color: '#FFFFFF',
@@ -171,6 +181,8 @@ const styles = StyleSheet.create({
   },
   vwContentPrincipal: {
     height: 350,
+    width: '85%',
+    borderRadius: 10,
     backgroundColor: '#92E4ED',
     elevation: 3,
     justifyContent: 'center',
@@ -218,7 +230,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 10,
     borderColor: 'rgba(114, 221, 232, 0.3)',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   }),
@@ -229,9 +241,11 @@ const styles = StyleSheet.create({
   },
   vwWater: {
     height: 413,
+    alignItems: 'center',
   },
   savContent: {
     flex: 1,
+    // backgroundColor: '#474747',
     backgroundColor: '#FFFFFF',
   },
   tchHeaderMenu: {
@@ -243,7 +257,7 @@ const styles = StyleSheet.create({
   },
   tchWater: {
     position: 'absolute',
-    right: 20,
+    right: 12,
     bottom: 17,
     alignItems: 'center',
     borderRadius: 5,
@@ -254,15 +268,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }),
   txtEmpty: {
-    position: 'absolute',
-    elevation: 1,
     textAlign: 'center',
     fontSize: 30,
-    top: 80,
-    color: '#92E4ED',
-  },
-  lottieEmpty: {
-    flex: 1,
+    color: '#FFFFFF',
+    position: 'absolute',
+    bottom: '28%',
   },
   vwEmpty: {
     justifyContent: 'center',

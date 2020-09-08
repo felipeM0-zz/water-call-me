@@ -3,7 +3,7 @@ import uuid from 'react-native-uuid';
 let data = [
   {
     id: uuid(),
-    title: '200 ml — 16/07/20 as 18:38',
+    title: '200 ml — 16/07/20 as 18:38regerg',
   },
   {
     id: uuid(),
@@ -71,7 +71,7 @@ let data = [
   },
   {
     id: uuid(),
-    title: '200 ml — 16/07/20 as 23:37',
+    title: '200 ml — 16/07/20 as 23:35666',
   },
 ];
 
