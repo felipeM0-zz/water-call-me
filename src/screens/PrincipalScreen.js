@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -18,17 +18,35 @@ const PrincipalScreen = () => {
   const navigation = useNavigation();
   const dmsion = Dimensions.get('screen').width;
 
+  const [valueNow, setValueNow] = useState(0);
+  const [valueObj, setValueObj] = useState(2500);
+  const [valueIncrement, setValueIncrement] = useState(200);
+  const [showButtonIncrement, setShowButtonIncrement] = useState(true);
+
   const renderItem = ({item}) => (
     <View style={styles.vwHistory(dmsion - 100)}>
-      <Text style={{fontSize: 17, color: '#72dde8', fontWeight: 'bold'}}>
-        {item.title}
-      </Text>
+      <Text style={styles.txtContentHistory}>{item.title}</Text>
     </View>
   );
 
+  const incrementWater = () => {
+    setValueNow(valueNow + valueIncrement);
+  };
+
+  useEffect(() => {
+    valueNow >= valueObj
+      ? (setValueNow(valueObj),
+        setShowButtonIncrement(false),
+        setTimeout(() => {
+          setValueNow(0);
+          setShowButtonIncrement(true);
+        }, 1000))
+      : null;
+  }, [valueNow]);
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <View style={{height: 413}}>
+    <SafeAreaView style={styles.savContent}>
+      <View style={styles.vwWater}>
         <View style={styles.headerPrincipal}>
           <Text style={[styles.txtHeaderPrincipal, styles.txtShadow]}>
             Controle de Água
@@ -36,19 +54,9 @@ const PrincipalScreen = () => {
           <TouchableHighlight
             underlayColor="none"
             onPress={() => navigation.openDrawer()}
-            style={{
-              width: 60,
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'absolute',
-            }}>
+            style={styles.tchHeaderMenu}>
             <IconIon
-              style={{
-                textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                textShadowOffset: {width: -0.5, height: 0.5},
-                textShadowRadius: 1,
-              }}
+              style={styles.txtShadow}
               name="menu"
               size={30}
               color="#92E4ED"
@@ -65,45 +73,43 @@ const PrincipalScreen = () => {
 
           <View style={styles.vwContentPie}>
             <Progress.Pie
-              progress={0.7}
+              progress={valueNow / valueObj}
               borderWidth={0}
               size={190}
               color="rgba(146, 228, 237,0.6)"
             />
             <View style={styles.vwBackWhite}>
               <Text style={[styles.txtCenterPrincipal, styles.txtShadow]}>
-                0/0ml
+                {valueNow}/{valueObj}ml
               </Text>
             </View>
           </View>
 
-          <TouchableHighlight
-            underlayColor="none"
-            style={{
-              position: 'absolute',
-              right: 20,
-              bottom: 17,
-              alignItems: 'center',
-            }}>
-            <>
-              <Text style={[styles.txtIncremet, styles.txtShadow]}>+200ml</Text>
-              <IconIon
-                name="water"
-                size={70}
-                color="#FFFFFF"
-                style={styles.txtShadow}
-              />
-            </>
-          </TouchableHighlight>
+          {showButtonIncrement && (
+            <TouchableHighlight
+              onPress={() => incrementWater()}
+              underlayColor="none"
+              style={styles.tchWater}>
+              <>
+                <Text style={[styles.txtIncremet, styles.txtShadow]}>
+                  +{valueIncrement}ml
+                </Text>
+                <IconIon
+                  name="water"
+                  size={70}
+                  color="#FFFFFF"
+                  style={styles.txtShadow}
+                />
+              </>
+            </TouchableHighlight>
+          )}
 
           <Text style={[styles.txtHistory, styles.txtShadow]}>Histórico</Text>
         </View>
       </View>
 
       <FlatList
-        contentContainerStyle={{
-          alignItems: 'center',
-        }}
+        contentContainerStyle={styles.ftlHistory}
         data={Data}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
@@ -175,7 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   txtCenterPrincipal: {
-    fontSize: 28,
+    fontSize: 25,
     color: '#92E4ED',
   },
   vwHistory: (dms) => ({
@@ -190,6 +196,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   }),
+  txtContentHistory: {
+    fontSize: 17,
+    color: '#72dde8',
+    fontWeight: 'bold',
+  },
+  vwWater: {
+    height: 413,
+  },
+  savContent: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  tchHeaderMenu: {
+    width: 60,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+  },
+  tchWater: {
+    position: 'absolute',
+    right: 20,
+    bottom: 17,
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  ftlHistory: {
+    alignItems: 'center',
+  },
 });
 
 export default PrincipalScreen;
