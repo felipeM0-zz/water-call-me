@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import IconIon from 'react-native-vector-icons/Ionicons';
 import * as Progress from 'react-native-progress';
+import Lottie from 'lottie-react-native';
 import Data from '../data';
 
 const PrincipalScreen = () => {
@@ -22,10 +23,28 @@ const PrincipalScreen = () => {
   const [valueObj, setValueObj] = useState(2500);
   const [valueIncrement, setValueIncrement] = useState(200);
   const [showButtonIncrement, setShowButtonIncrement] = useState(true);
+  const [haveHistory, setHaveHistory] = useState(false);
+  const [myData, setMydata] = useState(Data.reverse());
 
   const renderItem = ({item}) => (
     <View style={styles.vwHistory(dmsion - 100)}>
       <Text style={styles.txtContentHistory}>{item.title}</Text>
+    </View>
+  );
+
+  const EmptyComponent = () => (
+    <View style={styles.vwEmpty}>
+      <Text style={[styles.txtEmpty, styles.txtShadow]}>
+        Sem histórico,{'\n'}beba água!
+      </Text>
+      <Lottie
+        speed={0.3}
+        source={require('../images/JSON/circle-water.json')}
+        autoPlay
+        loop
+        autoSize
+        style={styles.lottieEmpty}
+      />
     </View>
   );
 
@@ -42,6 +61,8 @@ const PrincipalScreen = () => {
           setShowButtonIncrement(true);
         }, 1000))
       : null;
+
+    myData.length <= 0 ? setHaveHistory(false) : setHaveHistory(true);
   }, [valueNow]);
 
   return (
@@ -104,15 +125,20 @@ const PrincipalScreen = () => {
             </TouchableHighlight>
           )}
 
-          <Text style={[styles.txtHistory, styles.txtShadow]}>Histórico</Text>
+          <Text style={[styles.txtHistory, styles.txtShadow]}>
+            Histórico ({myData.length}/100)
+          </Text>
         </View>
       </View>
 
       <FlatList
-        contentContainerStyle={styles.ftlHistory}
-        data={Data}
+        initialNumToRender={8}
+        maxToRenderPerBatch={2}
+        contentContainerStyle={styles.ftlHistory(haveHistory)}
+        data={myData.reverse()}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={EmptyComponent}
       />
     </SafeAreaView>
   );
@@ -166,7 +192,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   txtHistory: {
-    fontSize: 20,
+    fontSize: 18,
     position: 'absolute',
     bottom: 3,
     color: '#FFFFFF',
@@ -222,7 +248,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
   },
-  ftlHistory: {
+  ftlHistory: (hst) => ({
+    flex: hst ? 0 : 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }),
+  txtEmpty: {
+    position: 'absolute',
+    elevation: 1,
+    textAlign: 'center',
+    fontSize: 30,
+    top: 80,
+    color: '#92E4ED',
+  },
+  lottieEmpty: {
+    flex: 1,
+  },
+  vwEmpty: {
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });
