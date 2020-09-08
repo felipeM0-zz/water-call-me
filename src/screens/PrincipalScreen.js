@@ -14,7 +14,10 @@ import IconIon from 'react-native-vector-icons/Ionicons';
 import * as Progress from 'react-native-progress';
 import Lottie from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from '@react-native-community/async-storage';
+import uuid from 'react-native-uuid';
 import Data from '../data';
+import moment from 'moment';
 
 const PrincipalScreen = () => {
   const navigation = useNavigation();
@@ -29,7 +32,7 @@ const PrincipalScreen = () => {
 
   const renderItem = ({item}) => (
     <View style={styles.vwHistory(dmsion - 100)}>
-      <Text style={styles.txtContentHistory}>{item.title}</Text>
+      <Text style={styles.txtContentHistory}>{item.hist}</Text>
     </View>
   );
 
@@ -55,6 +58,48 @@ const PrincipalScreen = () => {
     setValueNow(valueNow + valueIncrement);
   };
 
+  const verify = async () => {
+    // let idnow = uuid(),
+    //   data = moment(new Date()).format('DD/MM/YY'),
+    //   hora = moment(new Date()).format('H:mm'),
+    //   value = valueIncrement.toString() + 'ml — ' + data + ' as ' + hora,
+    //   final = [
+    //     {
+    //       id: idnow,
+    //       history: value,
+    //     },
+    //   ];
+
+    // await AsyncStorage.setItem('@hist' + idnow, JSON.stringify(final));
+
+    let keys = await AsyncStorage.getAllKeys();
+    let correctKeys = [];
+    let allHist = [];
+
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i].substr(0, 5) == '@hist') {
+        correctKeys.push(keys[i]);
+      }
+    }
+
+    // console.log(correctKeys);
+
+    // correctKeys.forEach((e) => {
+    //   console.log(e);
+    // });
+
+    for (let i = 0; i < correctKeys.length; i++) {
+      JSON.parse(await AsyncStorage.getItem(correctKeys[i])).forEach((e) => {
+        let val = {id: e.id, hist: e.history};
+        allHist.push(val);
+      });
+    }
+
+    // setMydata(allHist);
+    setMydata(allHist);
+    // console.log(Data);
+  };
+
   useEffect(() => {
     valueNow >= valueObj
       ? (setValueNow(valueObj),
@@ -64,6 +109,8 @@ const PrincipalScreen = () => {
           setShowButtonIncrement(true);
         }, 1000))
       : null;
+
+    verify();
 
     myData.length <= 0 ? setHaveHistory(false) : setHaveHistory(true);
   }, [valueNow]);
