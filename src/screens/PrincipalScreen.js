@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -27,7 +27,7 @@ const PrincipalScreen = () => {
   const [valueObj, setValueObj] = useState(2500);
   const [valueIncrement, setValueIncrement] = useState(200);
   const [showButtonIncrement, setShowButtonIncrement] = useState(true);
-  const [haveHistory, setHaveHistory] = useState(false);
+  const [haveHistory, setHaveHistory] = useState(true);
   const [myData, setMydata] = useState([]);
 
   const renderItem = ({item}) => (
@@ -54,65 +54,70 @@ const PrincipalScreen = () => {
     </View>
   );
 
-  const incrementWater = () => {
-    setValueNow(valueNow + valueIncrement);
+  const verify = async () => {
+    try {
+      let keys = await AsyncStorage.getAllKeys();
+      let correctKeys = [];
+      let allHist = [];
+
+      for (let i = 0; i < keys.length; i++) {
+        if (keys[i].substr(0, 5) == '@hist') {
+          correctKeys.push(keys[i]);
+        }
+      }
+
+      for (let i = 0; i < correctKeys.length; i++) {
+        JSON.parse(await AsyncStorage.getItem(correctKeys[i])).forEach((e) => {
+          let val = {id: e.id, hist: e.history, date: e.date};
+          allHist.push(val);
+        });
+      }
+
+      let histFinal = allHist.sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date);
+      });
+
+      setMydata(histFinal);
+      histFinal.length <= 0 ? setHaveHistory(false) : setHaveHistory(true);
+      // await AsyncStorage.clear();
+    } catch (error) {
+      console.log('Verify - PrincipalScreen: ', error);
+    }
   };
 
-  const verify = async () => {
-    // let idnow = uuid(),
-    //   data = moment(new Date()).format('DD/MM/YY'),
-    //   hora = moment(new Date()).format('H:mm'),
-    //   value = valueIncrement.toString() + 'ml — ' + data + ' as ' + hora,
-    //   final = [
-    //     {
-    //       id: idnow,
-    //       history: value,
-    //     },
-    //   ];
+  const addnew = async () => {
+    try {
+      setValueNow(valueNow + valueIncrement);
+      let idnow = uuid(),
+        data = moment(new Date()).format('DD/MM/YY'),
+        hora = moment(new Date()).format('H:mm:ss'),
+        value = valueIncrement.toString() + 'ml — ' + data + ' as ' + hora,
+        final = [
+          {
+            id: idnow,
+            history: value,
+            date: new Date(),
+          },
+        ];
+      await AsyncStorage.setItem('@hist' + idnow, JSON.stringify(final));
+    } catch (error) {
+      console.log('addnew - PrincipalScreen: ', error);
+    } finally {
+      valueNow >= valueObj
+        ? (setValueNow(valueObj),
+          setShowButtonIncrement(false),
+          setTimeout(() => {
+            setValueNow(0);
+            setShowButtonIncrement(true);
+          }, 1000))
+        : null;
 
-    // await AsyncStorage.setItem('@hist' + idnow, JSON.stringify(final));
-
-    let keys = await AsyncStorage.getAllKeys();
-    let correctKeys = [];
-    let allHist = [];
-
-    for (let i = 0; i < keys.length; i++) {
-      if (keys[i].substr(0, 5) == '@hist') {
-        correctKeys.push(keys[i]);
-      }
+      verify();
     }
-
-    // console.log(correctKeys);
-
-    // correctKeys.forEach((e) => {
-    //   console.log(e);
-    // });
-
-    for (let i = 0; i < correctKeys.length; i++) {
-      JSON.parse(await AsyncStorage.getItem(correctKeys[i])).forEach((e) => {
-        let val = {id: e.id, hist: e.history};
-        allHist.push(val);
-      });
-    }
-
-    // setMydata(allHist);
-    setMydata(allHist);
-    // console.log(Data);
   };
 
   useEffect(() => {
-    valueNow >= valueObj
-      ? (setValueNow(valueObj),
-        setShowButtonIncrement(false),
-        setTimeout(() => {
-          setValueNow(0);
-          setShowButtonIncrement(true);
-        }, 1000))
-      : null;
-
     verify();
-
-    myData.length <= 0 ? setHaveHistory(false) : setHaveHistory(true);
   }, [valueNow]);
 
   return (
@@ -163,7 +168,7 @@ const PrincipalScreen = () => {
 
           {showButtonIncrement && (
             <TouchableHighlight
-              onPress={() => incrementWater()}
+              onPress={() => addnew()}
               underlayColor="none"
               style={styles.tchWater}>
               <>
@@ -192,7 +197,7 @@ const PrincipalScreen = () => {
         initialNumToRender={8}
         maxToRenderPerBatch={2}
         contentContainerStyle={styles.ftlHistory(haveHistory)}
-        data={myData.reverse()}
+        data={myData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         ListEmptyComponent={EmptyComponent}
