@@ -24,14 +24,14 @@ const PrincipalScreen = () => {
   const navigation = useNavigation();
   const dmsion = Dimensions.get('screen').width;
 
-  const [valueNow, setValueNow] = useState(2400);
+  const [valueNow, setValueNow] = useState(2300);
   const [valueObj, setValueObj] = useState(2500);
   const [valueIncrement, setValueIncrement] = useState(200);
   const [haveHistory, setHaveHistory] = useState(true);
   const [myData, setMydata] = useState([]);
 
   const [waterFull, setWaterFull] = useState(false);
-  const [timeDrink, setTimeDrink] = useState(false);
+  const [timeDrink, setTimeDrink] = useState(true);
   const [cleaningHistory, setCleaningHistory] = useState(false);
 
   const renderItem = ({item, index}) => (
@@ -123,7 +123,7 @@ const PrincipalScreen = () => {
     try {
       setValueNow(valueNow + valueIncrement);
       let val = valueNow + valueIncrement;
-      val >= valueObj ? setValueNow(valueObj) : null;
+      val >= valueObj ? (setValueNow(valueObj), setWaterFull(true)) : null;
 
       let idnow = uuid(),
         data = moment(new Date()).format('DD/MM/YY'),
@@ -201,6 +201,22 @@ const PrincipalScreen = () => {
           icon="time-drink"
           title="Hora de beber água"
           text={`Se já bebeu, confirme para adicionar mais ${valueIncrement}ml ao seu objetivo. É bom estar levando isso á sério!`}
+        />
+      )}
+
+      {waterFull && (
+        <BottomAlert
+          showConfirm={false}
+          showCancel={true}
+          visible={true}
+          closeAlert={() => removeAlert()}
+          showNew={true}
+          loop={false}
+          particles={true}
+          icon="completed"
+          position="center"
+          title="Você conseguiu!"
+          text="E agora, o que vai ser?"
         />
       )}
 

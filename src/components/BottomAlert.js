@@ -7,7 +7,7 @@ import Lottie from 'lottie-react-native';
 // IMAGES JSON
 // import success from '../images/JSON/success.json';
 // import info from '../images/JSON/info.json';
-// import warning from '../images/JSON/warning.json';
+import completed from '../images/JSON/cicle-completed.json';
 import timedrink from '../images/JSON/time-drinkwater.json';
 import historic from '../images/JSON/historic.json';
 // STYLES
@@ -17,10 +17,12 @@ export default (props) => {
   const isFocused = useIsFocused();
 
   const [showConfirm, setShowConfirm] = useState(true);
+  const [showCancel, setShowCancel] = useState(true);
   const [showHistory, setShowHistory] = useState(false);
   const [showKeep, setShowKeep] = useState(false);
-  const [showCancel, setShowCancel] = useState(true);
   const [showDrink, setShowDrink] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [particles, setParticles] = useState(false);
 
   useEffect(() => {
     props.showConfirm == false ? setShowConfirm(false) : null;
@@ -28,6 +30,8 @@ export default (props) => {
     props.showHistory ? setShowHistory(true) : null;
     props.showKeep ? setShowKeep(true) : null;
     props.showDrink ? setShowDrink(true) : null;
+    props.showNew ? setShowNew(true) : null;
+    props.particles ? setParticles(true) : null;
   }, [isFocused]);
 
   const returnIcon = () => {
@@ -36,8 +40,8 @@ export default (props) => {
         ? historic
         : props.icon == 'time-drink'
         ? timedrink
-        : props.icon == 'warning'
-        ? warning
+        : props.icon == 'completed'
+        ? completed
         : props.icon == 'error'
         ? error
         : props.icon == 'think'
@@ -75,10 +79,18 @@ export default (props) => {
             {props.icon != null && (
               <View style={styles.vwIcon}>
                 <Lottie
-                  resizeMode="contain"
                   source={returnIcon()}
                   autoPlay
                   loop={props.loop == null ? true : props.loop}
+                />
+              </View>
+            )}
+            {particles && (
+              <View style={[styles.vwIcon, {position: 'absolute'}]}>
+                <Lottie
+                  source={require('../images/JSON/particles.json')}
+                  autoPlay
+                  loop={false}
                 />
               </View>
             )}
@@ -122,6 +134,22 @@ export default (props) => {
                     styles.txtConfirmColor('#FFFFFF'),
                   ]}>
                   Já bebi, adicione!
+                </Text>
+              </TouchableHighlight>
+            )}
+
+            {showNew && (
+              <TouchableHighlight
+                underlayColor="none"
+                activeOpacity={1}
+                onPress={() => props.drinkWater()}
+                style={[styles.btnConfirm, styles.btnConfirmBgc('#31949e')]}>
+                <Text
+                  style={[
+                    styles.txtConfirm,
+                    styles.txtConfirmColor('#FFFFFF'),
+                  ]}>
+                  Agendar novo ciclo
                 </Text>
               </TouchableHighlight>
             )}
