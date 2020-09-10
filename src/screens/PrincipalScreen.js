@@ -30,9 +30,28 @@ const PrincipalScreen = () => {
   const [haveHistory, setHaveHistory] = useState(true);
   const [myData, setMydata] = useState([]);
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item, index}) => (
     <View style={styles.vwHistory(dmsion - 100)}>
-      <Text style={styles.txtContentHistory}>{item.hist}</Text>
+      <View
+        style={{
+          position: 'absolute',
+          right: 0.2,
+          backgroundColor: '#31949e',
+          paddingRight: 6,
+          paddingLeft: 8,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderColor: '#FFFFFF',
+          bottom: -2,
+          borderTopLeftRadius: 15,
+        }}>
+        <Text style={{fontSize: 10, color: '#FFFFFF', fontWeight: 'bold'}}>
+          {myData.length - Number(index)}
+        </Text>
+      </View>
+      <Text style={[styles.txtContentHistory, styles.txtShadow]}>
+        {item.hist}
+      </Text>
     </View>
   );
 
@@ -68,7 +87,11 @@ const PrincipalScreen = () => {
 
       for (let i = 0; i < correctKeys.length; i++) {
         JSON.parse(await AsyncStorage.getItem(correctKeys[i])).forEach((e) => {
-          let val = {id: e.id, hist: e.history, date: e.date};
+          let val = {
+            id: e.id,
+            hist: e.history,
+            date: e.date,
+          };
           allHist.push(val);
         });
       }
@@ -82,15 +105,19 @@ const PrincipalScreen = () => {
       // await AsyncStorage.clear();
     } catch (error) {
       console.log('Verify - PrincipalScreen: ', error);
+    } finally {
+      setShowButtonIncrement(true);
     }
   };
 
   const addnew = async () => {
     try {
       setValueNow(valueNow + valueIncrement);
+      setShowButtonIncrement(false);
+
       let idnow = uuid(),
         data = moment(new Date()).format('DD/MM/YY'),
-        hora = moment(new Date()).format('H:mm:ss'),
+        hora = moment(new Date()).format('H:mm (a)'),
         value = valueIncrement.toString() + 'ml — ' + data + ' as ' + hora,
         final = [
           {
@@ -103,14 +130,7 @@ const PrincipalScreen = () => {
     } catch (error) {
       console.log('addnew - PrincipalScreen: ', error);
     } finally {
-      valueNow >= valueObj
-        ? (setValueNow(valueObj),
-          setShowButtonIncrement(false),
-          setTimeout(() => {
-            setValueNow(0);
-            setShowButtonIncrement(true);
-          }, 1000))
-        : null;
+      valueNow >= valueObj ? setValueNow(valueObj) : null;
 
       verify();
     }
@@ -142,7 +162,7 @@ const PrincipalScreen = () => {
         </View>
         {/* CONTAINER PIE */}
         <LinearGradient
-          colors={['#47bdc9', '#47bdc9', '#92E4ED', 'rgba(190, 178, 237,0.5)']}
+          colors={['#47bdc9', '#92E4ED', '#92E4ED', '#47bdc9']}
           style={styles.vwContentPrincipal}>
           <IconF
             name="gear"
@@ -186,9 +206,7 @@ const PrincipalScreen = () => {
           )}
 
           {myData.length > 0 && (
-            <Text style={[styles.txtHistory, styles.txtShadow]}>
-              Histórico ({myData.length}/100)
-            </Text>
+            <Text style={[styles.txtHistory, styles.txtShadow]}>Histórico</Text>
           )}
         </LinearGradient>
       </View>
@@ -235,8 +253,6 @@ const styles = StyleSheet.create({
     height: 350,
     width: '85%',
     borderRadius: 10,
-    backgroundColor: '#92E4ED',
-    elevation: 3,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: '20%',
@@ -279,16 +295,17 @@ const styles = StyleSheet.create({
     width: dms,
     marginBottom: 10,
     marginTop: 10,
-    borderWidth: 3,
-    borderRadius: 10,
-    borderColor: 'rgba(114, 221, 232, 0.3)',
+    borderRadius: 2,
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
+    borderBottomWidth: 3,
+    borderColor: '#31949e',
+    backgroundColor: '#47bdc9',
   }),
   txtContentHistory: {
     fontSize: 17,
-    color: '#72dde8',
+    color: '#FFFFFF',
     fontWeight: 'bold',
   },
   vwWater: {
