@@ -8,7 +8,7 @@ import Lottie from 'lottie-react-native';
 // import success from '../images/JSON/success.json';
 // import info from '../images/JSON/info.json';
 // import warning from '../images/JSON/warning.json';
-// import error from '../images/JSON/error.json';
+import timedrink from '../images/JSON/time-drinkwater.json';
 import historic from '../images/JSON/historic.json';
 // STYLES
 import styles from '../styles/BottomAlert';
@@ -20,20 +20,22 @@ export default (props) => {
   const [showHistory, setShowHistory] = useState(false);
   const [showKeep, setShowKeep] = useState(false);
   const [showCancel, setShowCancel] = useState(true);
+  const [showDrink, setShowDrink] = useState(false);
 
   useEffect(() => {
     props.showConfirm == false ? setShowConfirm(false) : null;
     props.showCancel == false ? setShowCancel(false) : null;
     props.showHistory ? setShowHistory(true) : null;
     props.showKeep ? setShowKeep(true) : null;
+    props.showDrink ? setShowDrink(true) : null;
   }, [isFocused]);
 
   const returnIcon = () => {
     let icon =
       props.icon == 'historic'
         ? historic
-        : props.icon == 'info'
-        ? info
+        : props.icon == 'time-drink'
+        ? timedrink
         : props.icon == 'warning'
         ? warning
         : props.icon == 'error'
@@ -106,6 +108,22 @@ export default (props) => {
                   </TouchableHighlight>
                 </View>
               </View>
+            )}
+
+            {showDrink && (
+              <TouchableHighlight
+                underlayColor="none"
+                activeOpacity={1}
+                onPress={() => props.drinkWater()}
+                style={[styles.btnConfirm, styles.btnConfirmBgc('#31949e')]}>
+                <Text
+                  style={[
+                    styles.txtConfirm,
+                    styles.txtConfirmColor('#FFFFFF'),
+                  ]}>
+                  Já bebi, adicione!
+                </Text>
+              </TouchableHighlight>
             )}
 
             {showHistory && (

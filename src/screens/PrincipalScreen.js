@@ -24,15 +24,14 @@ const PrincipalScreen = () => {
   const navigation = useNavigation();
   const dmsion = Dimensions.get('screen').width;
 
-  const [valueNow, setValueNow] = useState(0);
+  const [valueNow, setValueNow] = useState(2400);
   const [valueObj, setValueObj] = useState(2500);
   const [valueIncrement, setValueIncrement] = useState(200);
-  const [showButtonIncrement, setShowButtonIncrement] = useState(true);
   const [haveHistory, setHaveHistory] = useState(true);
   const [myData, setMydata] = useState([]);
 
-  const [limitHistory, setLimitHistory] = useState(false);
   const [waterFull, setWaterFull] = useState(false);
+  const [timeDrink, setTimeDrink] = useState(false);
   const [cleaningHistory, setCleaningHistory] = useState(false);
 
   const renderItem = ({item, index}) => (
@@ -93,12 +92,31 @@ const PrincipalScreen = () => {
 
       setMydata(histFinal);
       histFinal.length <= 0 ? setHaveHistory(false) : setHaveHistory(true);
+      verifyCountData(histFinal.length);
     } catch (error) {
       console.log('Verify - PrincipalScreen: ', error);
-    } finally {
-      let val = valueNow + valueIncrement;
-      val >= valueObj ? null : setShowButtonIncrement(true);
     }
+  };
+
+  const verifyCountData = (count) => {
+    let values = [];
+
+    count != null && count >= 100
+      ? (setCleaningHistory(true),
+        (values = [
+          'O histórico atingiu o limite definido, deseja limpá-lo (para guardar novos) ou mantê-lo (sem guardar novos) ?',
+          false,
+          true,
+          false,
+        ]))
+      : (values = [
+          'Limpar todo o histórico (ação irreversível!) ?',
+          true,
+          false,
+          true,
+        ]);
+
+    return values;
   };
 
   const addnew = async () => {
@@ -106,7 +124,6 @@ const PrincipalScreen = () => {
       setValueNow(valueNow + valueIncrement);
       let val = valueNow + valueIncrement;
       val >= valueObj ? setValueNow(valueObj) : null;
-      setShowButtonIncrement(false);
 
       let idnow = uuid(),
         data = moment(new Date()).format('DD/MM/YY'),
@@ -124,6 +141,7 @@ const PrincipalScreen = () => {
       console.log('addnew - PrincipalScreen: ', error);
     } finally {
       verify();
+      setTimeDrink(false);
     }
   };
 
@@ -139,15 +157,15 @@ const PrincipalScreen = () => {
     } catch (error) {
       console.log('clearHistory - Principal: ', error);
     } finally {
-      setLimitHistory(false);
       setCleaningHistory(false);
       verify();
     }
   };
 
   const removeAlert = () => {
-    setLimitHistory(false);
     setCleaningHistory(false);
+    setWaterFull(false);
+    setTimeDrink(false);
   };
 
   useEffect(() => {
@@ -156,30 +174,33 @@ const PrincipalScreen = () => {
 
   return (
     <SafeAreaView style={styles.savContent}>
-      {limitHistory && (
-        <BottomAlert
-          showConfirm={false}
-          showHistory={true}
-          showKeep={true}
-          showCancel={false}
-          visible={true}
-          closeAlert={() => removeAlert()}
-          clearHist={() => clearHistory()}
-          title="Histórico"
-          icon="historic"
-          text="O histórico atingiu o limite definido, deseja limpá-lo (para guardar novos) ou mantê-lo (sem guardar novos)?"
-        />
-      )}
-
       {cleaningHistory && (
         <BottomAlert
           showConfirm={false}
           showHistory={true}
+          showKeep={verifyCountData()[2]}
+          showCancel={verifyCountData()[1]}
           visible={true}
+          closeAlert={() => (verifyCountData()[3] ? removeAlert() : null)}
           clearHist={() => clearHistory()}
           title="Histórico"
           icon="historic"
-          text="Deseja limpar todo histórico?"
+          text={verifyCountData()[0]}
+        />
+      )}
+
+      {timeDrink && (
+        <BottomAlert
+          showConfirm={false}
+          showCancel={false}
+          visible={true}
+          closeAlert={() => removeAlert()}
+          showDrink={true}
+          drinkWater={() => addnew()}
+          position="center"
+          icon="time-drink"
+          title="Hora de beber água"
+          text={`Se já bebeu, confirme para adicionar mais ${valueIncrement}ml ao seu objetivo. É bom estar levando isso á sério!`}
         />
       )}
 
@@ -227,30 +248,14 @@ const PrincipalScreen = () => {
             </View>
           </View>
 
-          {showButtonIncrement && (
-            <TouchableHighlight
-              onPress={() => addnew()}
-              underlayColor="none"
-              style={styles.tchWater}>
-              <>
-                <Text style={[styles.txtIncremet, styles.txtShadow]}>
-                  +{valueIncrement}ml
-                </Text>
-                <IconIon
-                  name="water"
-                  size={70}
-                  color="#FFFFFF"
-                  style={styles.txtShadow}
-                />
-              </>
-            </TouchableHighlight>
-          )}
-
           {myData.length > 0 && (
             <>
               <TouchableHighlight
                 underlayColor="none"
-                onPress={() => setCleaningHistory(true)}
+                onPress={() => {
+                  setCleaningHistory(true);
+                  verifyCountData();
+                }}
                 style={styles.vwHistoricIcon}>
                 <>
                   <Text style={[styles.txtHistory, styles.txtShadow]}>

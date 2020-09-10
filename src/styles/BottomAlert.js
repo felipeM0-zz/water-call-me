@@ -37,6 +37,7 @@ export default StyleSheet.create({
   }),
   btnConfirm: {
     margin: 10,
+    marginBottom: 20,
     elevation: 2,
     padding: 12,
     paddingRight: 30,
@@ -86,9 +87,9 @@ export default StyleSheet.create({
   boxBottom: (position) => ({
     alignItems: 'center',
     justifyContent: 'center',
-    width: position == 'center' ? '80%' : '100%',
+    width: position == 'center' ? '90%' : '100%',
     backgroundColor: '#FFFFFF',
-    elevation: 5,
+    elevation: 3,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     borderBottomLeftRadius: position == 'center' ? 30 : 0,

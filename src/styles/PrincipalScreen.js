@@ -20,11 +20,6 @@ export default StyleSheet.create({
     textShadowOffset: {width: -0.8, height: 0.8},
     textShadowRadius: 1,
   },
-  txtIncremet: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
   vwContentPrincipal: {
     height: 350,
     width: '85%',
@@ -98,13 +93,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-  },
-  tchWater: {
-    position: 'absolute',
-    right: 12,
-    bottom: 17,
-    alignItems: 'center',
-    borderRadius: 5,
   },
   ftlHistory: (hst) => ({
     flex: hst ? 0 : 1,
