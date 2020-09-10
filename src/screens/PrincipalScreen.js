@@ -11,13 +11,14 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import IconIon from 'react-native-vector-icons/Ionicons';
+import IconMat from 'react-native-vector-icons/MaterialIcons';
 import * as Progress from 'react-native-progress';
 import Lottie from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-community/async-storage';
 import uuid from 'react-native-uuid';
-import Data from '../data';
 import moment from 'moment';
+import BottomAlert from '../components/BottomAlert';
 
 const PrincipalScreen = () => {
   const navigation = useNavigation();
@@ -29,6 +30,9 @@ const PrincipalScreen = () => {
   const [showButtonIncrement, setShowButtonIncrement] = useState(true);
   const [haveHistory, setHaveHistory] = useState(true);
   const [myData, setMydata] = useState([]);
+
+  const [limitHistory, setLimitHistory] = useState(false);
+  const [cleaningHistory, setCleaningHistory] = useState(false);
 
   const renderItem = ({item, index}) => (
     <View style={styles.vwHistory(dmsion - 100)}>
@@ -131,9 +135,31 @@ const PrincipalScreen = () => {
       console.log('addnew - PrincipalScreen: ', error);
     } finally {
       valueNow >= valueObj ? setValueNow(valueObj) : null;
-
       verify();
     }
+  };
+
+  const clearHistory = async () => {
+    try {
+      let keys = await AsyncStorage.getAllKeys();
+
+      for (let i = 0; i < keys.length; i++) {
+        if (keys[i].substr(0, 5) == '@hist') {
+          await AsyncStorage.removeItem(keys[i]);
+        }
+      }
+    } catch (error) {
+      console.log('clearHistory - Principal: ', error);
+    } finally {
+      setLimitHistory(false);
+      setCleaningHistory(false);
+      verify();
+    }
+  };
+
+  const removeAlert = () => {
+    setLimitHistory(false);
+    setCleaningHistory(false);
   };
 
   useEffect(() => {
@@ -142,6 +168,33 @@ const PrincipalScreen = () => {
 
   return (
     <SafeAreaView style={styles.savContent}>
+      {limitHistory && (
+        <BottomAlert
+          showConfirm={false}
+          showHistory={true}
+          showKeep={true}
+          showCancel={false}
+          visible={true}
+          closeAlert={() => removeAlert()}
+          clearHist={() => clearHistory()}
+          title="Histórico"
+          icon="historic"
+          text="O histórico atingiu o limite definido, deseja limpá-lo (para guardar novos) ou mantê-lo (sem guardar novos)?"
+        />
+      )}
+
+      {cleaningHistory && (
+        <BottomAlert
+          showConfirm={false}
+          showHistory={true}
+          visible={true}
+          clearHist={() => clearHistory()}
+          title="Histórico"
+          icon="historic"
+          text="Deseja limpar todo histórico?"
+        />
+      )}
+
       <View style={styles.vwWater}>
         {/* HEADER */}
         <View style={styles.headerPrincipal}>
@@ -206,7 +259,23 @@ const PrincipalScreen = () => {
           )}
 
           {myData.length > 0 && (
-            <Text style={[styles.txtHistory, styles.txtShadow]}>Histórico</Text>
+            <>
+              <View style={{position: 'absolute', bottom: 3, paddingRight: 25}}>
+                <Text style={[styles.txtHistory, styles.txtShadow]}>
+                  Histórico
+                </Text>
+                <IconMat
+                  name="layers-clear"
+                  size={20}
+                  color="#FFFFFF"
+                  style={[
+                    {position: 'absolute', bottom: 0, right: 0},
+                    styles.txtShadow,
+                  ]}
+                  onPress={() => setCleaningHistory(true)}
+                />
+              </View>
+            </>
           )}
         </LinearGradient>
       </View>
@@ -273,8 +342,6 @@ const styles = StyleSheet.create({
   },
   txtHistory: {
     fontSize: 18,
-    position: 'absolute',
-    bottom: 3,
     color: '#FFFFFF',
   },
   vwBackWhite: {
