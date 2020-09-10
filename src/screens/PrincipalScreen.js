@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
 import BottomAlert from '../components/BottomAlert';
+import ModalConfig from '../components/ModalConfig';
 import styles from '../styles/PrincipalScreen';
 
 const PrincipalScreen = () => {
@@ -31,8 +32,9 @@ const PrincipalScreen = () => {
   const [myData, setMydata] = useState([]);
 
   const [waterFull, setWaterFull] = useState(false);
-  const [timeDrink, setTimeDrink] = useState(true);
+  const [timeDrink, setTimeDrink] = useState(false);
   const [cleaningHistory, setCleaningHistory] = useState(false);
+  const [showConfig, setShowConfig] = useState(true);
 
   const renderItem = ({item, index}) => (
     <View style={styles.vwHistory(dmsion - 100)}>
@@ -174,6 +176,8 @@ const PrincipalScreen = () => {
 
   return (
     <SafeAreaView style={styles.savContent}>
+      {showConfig && <ModalConfig />}
+
       {cleaningHistory && (
         <BottomAlert
           showConfirm={false}
