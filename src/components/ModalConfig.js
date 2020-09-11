@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Modal,
@@ -9,8 +9,35 @@ import {
 } from 'react-native';
 import IconI from 'react-native-vector-icons/Ionicons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import {TextInputMask} from 'react-native-masked-text';
 
 const ModalConfig = () => {
+  const [inputCalc, setInputCalc] = useState('');
+  const [inputManual, setInputManual] = useState('');
+  const [resultCalc, setResultCalc] = useState('?');
+  const [resultManual, setResultManual] = useState('?');
+  const [disabledCalc, setDisabledCalc] = useState(true);
+  const [disabledManual, setDisabledManual] = useState(true);
+
+  const verifyFieldCalc = (num) => {
+    setResultManual('?');
+    setInputManual('');
+    setDisabledManual(true);
+    let val = Number(num.replace(',', '.'));
+    num.length >= 5
+      ? (setResultCalc((val * 35).toFixed(0)), setDisabledCalc(false))
+      : (setResultCalc('?'), setDisabledCalc(true));
+  };
+
+  const verifyFieldManual = (num) => {
+    setResultCalc('?');
+    setInputCalc('');
+    setDisabledCalc(true);
+    num.length >= 5
+      ? (setResultManual(num), setDisabledManual(false))
+      : (setResultManual('?'), setDisabledManual(true));
+  };
+
   return (
     <Modal
       visible={true}
@@ -34,8 +61,15 @@ const ModalConfig = () => {
             <View style={styles.vwBoxOption}>
               <View style={[styles.kitJust, styles.vwInp]}>
                 <Text style={styles.txtTitleInp}>peso</Text>
-                <TextInput
+                <TextInputMask
                   keyboardType="numeric"
+                  options={{mask: '99,99'}}
+                  type={'custom'}
+                  value={inputCalc}
+                  onChangeText={(txt) => {
+                    setInputCalc(txt);
+                    verifyFieldCalc(txt);
+                  }}
                   maxLength={5}
                   style={styles.inpPeso}
                   placeholder="63,00"
@@ -58,27 +92,43 @@ const ModalConfig = () => {
                 </TouchableHighlight>
               </View>
               <Text style={styles.txtEqual}>=</Text>
-              <Text style={styles.txtFirstResult}>2.205</Text>
+              <Text style={styles.txtFirstResult}>{resultCalc}</Text>
               <Text style={styles.txtFirstMl}>ml</Text>
             </View>
             <View>
               <TouchableHighlight
                 underlayColor="none"
-                onPress={() => {}}
+                onPress={() => alert('calc')}
+                disabled={disabledCalc}
                 style={styles.tchCalcOption}>
                 <Text style={[styles.txtCalcOption, styles.txtShadow]}>
-                  Definir 2.205 como objetivo
+                  Definir {resultCalc} como objetivo
                 </Text>
               </TouchableHighlight>
             </View>
           </View>
 
+          {/* ------------------------------ */}
+
           <View style={[styles.kitJust, styles.vwGroup]}>
             <Text style={styles.txtOption}>Objetivo manualmente</Text>
             <View style={styles.vwBoxOption}>
-              <TextInput
+              <TextInputMask
                 keyboardType="numeric"
-                maxLength={5}
+                maxLength={6}
+                type={'money'}
+                options={{
+                  precision: 0,
+                  separator: '.',
+                  delimiter: '.',
+                  unit: '',
+                  suffixUnit: '',
+                }}
+                value={inputManual}
+                onChangeText={(txt) => {
+                  setInputManual(txt);
+                  verifyFieldManual(txt);
+                }}
                 style={[styles.inpPeso, styles.inpObjManual]}
                 placeholder="1.800"
                 placeholderTextColor="rgba(0,0,0,0.15)"
@@ -97,10 +147,11 @@ const ModalConfig = () => {
             <View>
               <TouchableHighlight
                 underlayColor="none"
-                onPress={() => {}}
+                onPress={() => alert('manual')}
+                disabled={disabledManual}
                 style={styles.tchCalcOption}>
                 <Text style={[styles.txtCalcOption, styles.txtShadow]}>
-                  Definir 1.800 como objetivo
+                  Definir {resultManual} como objetivo
                 </Text>
               </TouchableHighlight>
             </View>
