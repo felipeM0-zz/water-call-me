@@ -72,7 +72,7 @@ export default StyleSheet.create({
     paddingRight: 10,
     paddingLeft: 10,
     paddingTop: 20,
-    paddingBottom: 10,
+    paddingBottom: 20,
     marginRight: 20,
     marginLeft: 20,
     justifyContent: 'center',

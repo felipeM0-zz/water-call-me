@@ -4,9 +4,11 @@ import {useIsFocused} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IconFI from 'react-native-vector-icons/Fontisto';
 import SwitchSelector from 'react-native-switch-selector';
-
-// STYLES
+// EXTERNAL SCRIPTS
+import {convertToNum} from '../scripts/converters.js';
+// EXTERNAL STYLES
 import styles from '../styles/BottomAlert';
+import stylesB from '../styles/BallonApprox';
 
 export default (props) => {
   const isFocused = useIsFocused();
@@ -26,7 +28,7 @@ export default (props) => {
           ? '#FFFFFF'
           : '#31949e'
       }
-      style={{marginRight: 8}}
+      style={stylesB.iconGender}
     />
   );
 
@@ -89,23 +91,9 @@ export default (props) => {
               </Text>
             </View>
 
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: 20,
-                marginBottom: 10,
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: 20,
-                }}>
-                <Text style={{fontWeight: 'bold', color: '#333'}}>
-                  Gênero:{' '}
-                </Text>
+            <View style={stylesB.contentBody}>
+              <View style={stylesB.groupBox}>
+                <Text style={stylesB.subtitOption}>Defina seu gênero</Text>
                 <SwitchSelector
                   onPress={(value) => {
                     setGender(
@@ -122,7 +110,7 @@ export default (props) => {
                   buttonColor="#31949e"
                   borderColor="#31949e"
                   hasPadding
-                  style={{width: '70%'}}
+                  style={stylesB.widOption}
                   options={[
                     {
                       label: 'Feminino',
@@ -140,15 +128,9 @@ export default (props) => {
 
               {gender != -1 && showMass && (
                 <>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginBottom: 20,
-                    }}>
-                    <Text style={{fontWeight: 'bold', color: '#333'}}>
-                      Massa:{' '}
+                  <View style={stylesB.groupBox}>
+                    <Text style={stylesB.subtitOption}>
+                      Qual sua massa, aproximadamente?
                     </Text>
                     <SwitchSelector
                       textColor="#31949e"
@@ -160,7 +142,7 @@ export default (props) => {
                       buttonColor="#31949e"
                       borderColor="#31949e"
                       hasPadding
-                      style={{width: '70%'}}
+                      style={stylesB.widOption}
                       options={[
                         {
                           label: selectorMass(gender).g1.label,
@@ -187,22 +169,10 @@ export default (props) => {
 
             {showFine && (
               <>
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontSize: 17,
-                    width: '80%',
-                    marginBottom: 5,
-                    color: 'rgba(0,0,0,0.5)',
-                  }}>
+                <Text style={stylesB.txtResult}>
                   Para seu gênero e aproximação de peso recomendamos:{' '}
-                  <Text
-                    style={{
-                      fontWeight: 'bold',
-                      fontSize: 22,
-                      color: '#31949e',
-                    }}>
-                    {resultMass}
+                  <Text style={stylesB.txtResultVal}>
+                    {convertToNum(resultMass)}
                   </Text>{' '}
                   ml
                 </Text>
@@ -212,7 +182,7 @@ export default (props) => {
                       underlayColor="none"
                       activeOpacity={1}
                       onPress={() => {
-                        props.onFine(resultMass);
+                        props.onFine(convertToNum(resultMass));
                         props.closeAlert();
                       }}
                       style={[
