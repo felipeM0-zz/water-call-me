@@ -1,32 +1,32 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Modal,
-  Text,
-  View,
-  TouchableHighlight,
-  TextInput,
-} from 'react-native';
+import {StyleSheet, Modal, Text, View, TouchableHighlight} from 'react-native';
 import IconI from 'react-native-vector-icons/Ionicons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
+import IconMIC from 'react-native-vector-icons/MaterialCommunityIcons';
 import {TextInputMask} from 'react-native-masked-text';
+import BallonApprox from '../components/BallonApprox';
 
 const ModalConfig = () => {
   const [inputCalc, setInputCalc] = useState('');
   const [inputManual, setInputManual] = useState('');
+  const [inputQuant, setInputQuant] = useState('');
   const [resultCalc, setResultCalc] = useState('?');
   const [resultManual, setResultManual] = useState('?');
+  const [resultQuant, setResultQuant] = useState('?');
   const [disabledCalc, setDisabledCalc] = useState(true);
   const [disabledManual, setDisabledManual] = useState(true);
+  const [disabledQuant, setDisabledQuant] = useState(true);
+  const [showBallon, setShowBallon] = useState(false);
 
   const verifyFieldCalc = (num) => {
     setResultManual('?');
     setInputManual('');
     setDisabledManual(true);
     let val = Number(num.replace(',', '.'));
-    num.length >= 5
+    num.length >= 5 && num.length <= 6
       ? (setResultCalc((val * 35).toFixed(0)), setDisabledCalc(false))
       : (setResultCalc('?'), setDisabledCalc(true));
+    val == 0.0 || val == 0.0 ? setInputCalc('') : null;
   };
 
   const verifyFieldManual = (num) => {
@@ -38,6 +38,16 @@ const ModalConfig = () => {
       : (setResultManual('?'), setDisabledManual(true));
   };
 
+  const verifyFieldQuant = (num) => {
+    num.length >= 3
+      ? (setResultQuant(num), setDisabledQuant(false))
+      : (setResultQuant('?'), setDisabledQuant(true));
+  };
+
+  const closeAlert = () => {
+    setShowBallon(false);
+  };
+
   return (
     <Modal
       visible={true}
@@ -46,6 +56,19 @@ const ModalConfig = () => {
       statusBarTranslucent={true}
       onRequestClose={() => {}}>
       <View style={styles.vwContent}>
+        {showBallon && (
+          <BallonApprox
+            closeAlert={() => closeAlert()}
+            title="Por aproximação"
+            visible={showBallon}
+            position="center"
+            onFine={(v) => {
+              setInputManual(v);
+              verifyFieldManual(v);
+            }}
+          />
+        )}
+
         <View style={[styles.vwHeader, styles.kitJust]}>
           <TouchableHighlight
             onPress={() => {}}
@@ -63,14 +86,20 @@ const ModalConfig = () => {
                 <Text style={styles.txtTitleInp}>peso</Text>
                 <TextInputMask
                   keyboardType="numeric"
-                  options={{mask: '99,99'}}
-                  type={'custom'}
+                  options={{
+                    precision: 2,
+                    separator: '.',
+                    delimiter: '.',
+                    unit: '',
+                    suffixUnit: '',
+                  }}
+                  type={'money'}
                   value={inputCalc}
                   onChangeText={(txt) => {
                     setInputCalc(txt);
                     verifyFieldCalc(txt);
                   }}
-                  maxLength={5}
+                  maxLength={6}
                   style={styles.inpPeso}
                   placeholder="63,00"
                   placeholderTextColor="rgba(0,0,0,0.15)"
@@ -98,7 +127,7 @@ const ModalConfig = () => {
             <View>
               <TouchableHighlight
                 underlayColor="none"
-                onPress={() => alert('calc')}
+                onPress={() => {}}
                 disabled={disabledCalc}
                 style={styles.tchCalcOption}>
                 <Text style={[styles.txtCalcOption, styles.txtShadow]}>
@@ -115,7 +144,7 @@ const ModalConfig = () => {
             <View style={styles.vwBoxOption}>
               <TextInputMask
                 keyboardType="numeric"
-                maxLength={6}
+                maxLength={5}
                 type={'money'}
                 options={{
                   precision: 0,
@@ -144,14 +173,22 @@ const ModalConfig = () => {
                 mililitros
               </Text>
             </View>
-            <View>
+            <View style={{flexDirection: 'row'}}>
               <TouchableHighlight
                 underlayColor="none"
-                onPress={() => alert('manual')}
+                onPress={() => {}}
                 disabled={disabledManual}
                 style={styles.tchCalcOption}>
                 <Text style={[styles.txtCalcOption, styles.txtShadow]}>
                   Definir {resultManual} como objetivo
+                </Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                underlayColor="none"
+                onPress={() => setShowBallon(true)}
+                style={styles.tchCalcOption}>
+                <Text style={[styles.txtCalcOption, styles.txtShadow]}>
+                  <IconMIC name="approximately-equal-box" size={25} />
                 </Text>
               </TouchableHighlight>
             </View>
@@ -160,9 +197,15 @@ const ModalConfig = () => {
           <View style={[styles.kitJust, styles.vwGroup]}>
             <Text style={styles.txtOption}>Definir quantidade</Text>
             <View style={styles.vwBoxOption}>
-              <TextInput
+              <TextInputMask
+                type={'only-numbers'}
+                value={inputQuant}
+                onChangeText={(txt) => {
+                  setInputQuant(txt);
+                  verifyFieldQuant(txt);
+                }}
                 keyboardType="numeric"
-                maxLength={5}
+                maxLength={3}
                 style={[styles.inpPeso, styles.inpQuant]}
                 placeholder="200"
                 placeholderTextColor="rgba(0,0,0,0.15)"
@@ -182,9 +225,10 @@ const ModalConfig = () => {
               <TouchableHighlight
                 underlayColor="none"
                 onPress={() => {}}
+                disabled={disabledQuant}
                 style={styles.tchCalcOption}>
                 <Text style={[styles.txtCalcOption, styles.txtShadow]}>
-                  Definir 200 como quantidade
+                  Definir {resultQuant} como quantidade
                 </Text>
               </TouchableHighlight>
             </View>
@@ -319,6 +363,10 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     borderBottomWidth: 3,
     borderColor: '#1d6970',
+    marginRight: 5,
+    marginLeft: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   txtCalcOption: {
     color: '#FFFFFF',
