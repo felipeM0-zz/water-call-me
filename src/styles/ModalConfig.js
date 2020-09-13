@@ -97,10 +97,10 @@ const styles = StyleSheet.create({
   },
   txtFirstX: {
     alignSelf: 'center',
-    paddingTop: 18,
+    paddingTop: 20,
     paddingRight: 5,
     paddingLeft: 5,
-    fontSize: 20,
+    fontSize: 15,
     color: 'rgba(0,0,0,0.5)',
     fontWeight: 'bold',
   },
@@ -187,17 +187,24 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   txtObjFinal: (obj) => ({
-    fontSize: obj != 'indefinido' ? 20 : 14,
+    fontSize: obj != 'indefinido' ? 18 : 14,
     color: obj != 'indefinido' ? '#31949e' : 'rgba(0,0,0,0.25)',
   }),
   txtQuantFinal: (obj) => ({
-    fontSize: obj != 'indefinida' ? 20 : 14,
+    fontSize: obj != 'indefinida' ? 18 : 14,
     color: obj != 'indefinida' ? '#31949e' : 'rgba(0,0,0,0.25)',
   }),
+  txtResultFinal: {
+    fontSize: 18,
+    color: '#31949e',
+  },
   vwBoxRight: {
     width: '40%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  svConfig: {
+    flex: 1,
   },
 });
 

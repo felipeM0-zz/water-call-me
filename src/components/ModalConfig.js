@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Modal, Text, View, TouchableHighlight, ScrollView} from 'react-native';
 import IconI from 'react-native-vector-icons/Ionicons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
@@ -23,6 +23,7 @@ const ModalConfig = () => {
   const [showBallon, setShowBallon] = useState(false);
   const [objFinal, setObjFinal] = useState('indefinido');
   const [quantFinal, setQuantFinal] = useState('indefinida');
+  const [resultGlass, setResultGlass] = useState([false, '']);
 
   const verifyFieldCalc = (num) => {
     setResultManual('?');
@@ -45,7 +46,9 @@ const ModalConfig = () => {
   };
 
   const verifyFieldQuant = (num) => {
-    num.length >= 3
+    num == undefined
+      ? (setInputQuant(''), setResultQuant('?'), setDisabledQuant(true))
+      : num.length >= 3
       ? (setResultQuant(num), setDisabledQuant(false))
       : (setResultQuant('?'), setDisabledQuant(true));
   };
@@ -59,6 +62,29 @@ const ModalConfig = () => {
       ? true
       : false;
   };
+
+  const ResetThisScreen = () => {
+    verifyFieldCalc('');
+    verifyFieldManual('');
+    verifyFieldQuant();
+    setObjFinal('indefinido');
+    setQuantFinal('indefinida');
+  };
+
+  useEffect(() => {
+    if (verifyFinals()) {
+      let i = 1,
+        originalQnt = parseInt(quantFinal),
+        qnt = parseInt(quantFinal);
+      while (qnt <= parseFloat(objFinal.replace('.', ''))) {
+        qnt += originalQnt;
+        i++;
+      }
+      setResultGlass([true, i]);
+    } else {
+      setResultGlass([false, '']);
+    }
+  }, [objFinal, quantFinal]);
 
   return (
     <Modal
@@ -89,7 +115,7 @@ const ModalConfig = () => {
           </TouchableHighlight>
           <Text style={styles.txtConfig}>Configurações</Text>
         </View>
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={styles.svConfig}>
           <View>
             <View style={[styles.kitJust, styles.vwGroup]}>
               <Text style={styles.txtOption}>
@@ -277,6 +303,13 @@ const ModalConfig = () => {
                     <IconI name="checkmark" size={18} color="#10ee10" />
                   )}
                 </Text>
+                {resultGlass[0] && (
+                  <Text style={styles.txtInfoLeft}>
+                    Em torno de{' '}
+                    <Text style={styles.txtResultFinal}>{resultGlass[1]}</Text>{' '}
+                    copos
+                  </Text>
+                )}
               </View>
             </View>
             <View style={styles.vwBoxRight}>
@@ -293,7 +326,7 @@ const ModalConfig = () => {
           </View>
           {(objFinal != 'indefinido' || quantFinal != 'indefinida') && (
             <TouchableHighlight
-              onPress={() => console.log('foi')}
+              onPress={() => ResetThisScreen()}
               underlayColor="none"
               style={[styles.tchRestore, styles.kitJust]}>
               <IconMIC name="restore" size={18} color="#FFFFFF" />
