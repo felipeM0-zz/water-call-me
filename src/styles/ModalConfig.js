@@ -76,6 +76,10 @@ const styles = StyleSheet.create({
   iconQuestion: {
     alignSelf: 'flex-end',
   },
+  positionIconQuestion: {
+    position: 'absolute',
+    top: -5,
+  },
   txt35ml: {
     fontSize: 20,
     color: '#31949e',
@@ -205,6 +209,33 @@ const styles = StyleSheet.create({
   },
   svConfig: {
     flex: 1,
+  },
+  TTP: {
+    borderRadius: 3,
+    borderLeftWidth: 3,
+    borderColor: '#1d6970',
+  },
+  txtContentTTP: {
+    textAlign: 'justify',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowRadius: 2,
+    textShadowOffset: {height: 1, width: -1},
+    paddingRight: 5,
+  },
+  tchKnowMoreTTP: {
+    backgroundColor: '#1d6970',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 1,
+    paddingRight: 7,
+    paddingLeft: 7,
+    alignSelf: 'flex-end',
+  },
+  txtKnowMoreTTP: {
+    color: '#FFFFFF',
+    fontSize: 11,
   },
 });
 

@@ -6,10 +6,10 @@ import Lottie from 'lottie-react-native';
 // import {translate} from '../locales';
 // IMAGES JSON
 // import success from '../images/JSON/success.json';
-// import info from '../images/JSON/info.json';
 import completed from '../images/JSON/cicle-completed.json';
 import timedrink from '../images/JSON/time-drinkwater.json';
 import historic from '../images/JSON/historic.json';
+import caution from '../images/JSON/caution.json';
 // STYLES
 import styles from '../styles/BottomAlert';
 
@@ -42,8 +42,8 @@ export default (props) => {
         ? timedrink
         : props.icon == 'completed'
         ? completed
-        : props.icon == 'error'
-        ? error
+        : props.icon == 'caution'
+        ? caution
         : props.icon == 'think'
         ? think
         : null;
@@ -51,7 +51,7 @@ export default (props) => {
   };
 
   const corInfo = () => {
-    let req = props.icon == 'warning',
+    let req = props.icon == 'caution',
       bgc = req ? '#c22f47' : '#90ee90',
       txt = req ? '#FFFFFF' : '#006400';
     return [bgc, txt];

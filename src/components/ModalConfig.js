@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, Text, View, TouchableHighlight, ScrollView} from 'react-native';
+import {
+  Modal,
+  Text,
+  View,
+  TouchableHighlight,
+  ScrollView,
+  Linking,
+} from 'react-native';
 import IconI from 'react-native-vector-icons/Ionicons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconMIC from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,6 +14,7 @@ import {TextInputMask} from 'react-native-masked-text';
 import {Tooltip} from 'react-native-elements';
 // EXTERNAL COMPONENTS
 import BallonApprox from '../components/BallonApprox';
+import BottomAlert from '../components/BottomAlert';
 // EXTERNAL STYLES
 import styles from '../styles/ModalConfig';
 import {convertToNum} from '../scripts/converters';
@@ -25,6 +33,7 @@ const ModalConfig = (props) => {
   const [objFinal, setObjFinal] = useState('indefinido');
   const [quantFinal, setQuantFinal] = useState('indefinida');
   const [resultGlass, setResultGlass] = useState([false, '']);
+  const [showRestoreAlert, setShowRestoreAlert] = useState(false);
 
   const verifyFieldCalc = (num) => {
     setResultManual('?');
@@ -89,7 +98,7 @@ const ModalConfig = (props) => {
 
   return (
     <Modal
-      visible={true}
+      visible={props.visible}
       animationType="fade"
       transparent={true}
       statusBarTranslucent={true}
@@ -149,7 +158,33 @@ const ModalConfig = (props) => {
                 <Text style={styles.txtFirstKg}>Kg</Text>
                 <Text style={styles.txtFirstX}>X</Text>
                 <View style={[styles.kitJust, styles.vw35ml]}>
-                  <Tooltip popover={<Text>Info here</Text>}>
+                  <Tooltip
+                    backgroundColor="#31949e"
+                    overlayColor="rgba(250, 250, 250, 0.85)"
+                    height={110}
+                    width={180}
+                    closeOnlyOnBackdropPress={true}
+                    containerStyle={styles.TTP}
+                    popover={
+                      <View>
+                        <View>
+                          <Text style={styles.txtContentTTP}>
+                            O cálculo feito é 35 ml de água multiplicado pelo
+                            peso corporal de cada um.
+                          </Text>
+                        </View>
+                        <TouchableHighlight
+                          style={styles.tchKnowMoreTTP}
+                          underlayColor="none"
+                          onPress={() =>
+                            Linking.openURL(
+                              'https://www.conquistesuavida.com.br/noticia/agua-na-medida-certa-aprenda-a-calcular-corretamente-a-sua-hidratacao_a2245/1#:~:text=O%20c%C3%A1lculo%20feito%20%C3%A9%2035,dia%20(aproximadamente%2014%20copos).',
+                            )
+                          }>
+                          <Text style={styles.txtKnowMoreTTP}>Saiba mais</Text>
+                        </TouchableHighlight>
+                      </View>
+                    }>
                     <>
                       <IconFA
                         name="question-circle"
@@ -209,8 +244,39 @@ const ModalConfig = (props) => {
                   placeholder="1.800"
                   placeholderTextColor="rgba(0,0,0,0.15)"
                 />
-
-                <Text style={styles.txtMili}>mililitros</Text>
+                <Tooltip
+                  backgroundColor="#31949e"
+                  overlayColor="rgba(250, 250, 250, 0.85)"
+                  height={190}
+                  width={185}
+                  closeOnlyOnBackdropPress={true}
+                  containerStyle={styles.TTP}
+                  popover={
+                    <View>
+                      <Text style={styles.txtContentTTP}>
+                        Defina um valor manual como seu objetivo. Esse valor irá
+                        determinar os ciclos que você fará até chegar ao fim
+                        dele. Use o botão{' '}
+                        <IconMIC name="approximately-equal-box" size={15} />{' '}
+                        abaixo caso queira definir o objetivo por aproximação,
+                        que iremos lhe recomendar alguns objetivos.
+                      </Text>
+                    </View>
+                  }>
+                  <>
+                    <IconFA
+                      name="question-circle"
+                      size={10}
+                      color="#333"
+                      style={[
+                        styles.txtTitleInp,
+                        styles.iconQuestion,
+                        styles.positionIconQuestion,
+                      ]}
+                    />
+                    <Text style={styles.txtMili}>mililitros</Text>
+                  </>
+                </Tooltip>
               </View>
               <View style={styles.vwContentManual}>
                 <TouchableHighlight
@@ -260,7 +326,38 @@ const ModalConfig = (props) => {
                   placeholderTextColor="rgba(0,0,0,0.15)"
                 />
 
-                <Text style={styles.txtMili}>mililitros</Text>
+                <Tooltip
+                  backgroundColor="#31949e"
+                  overlayColor="rgba(250, 250, 250, 0.85)"
+                  height={125}
+                  width={180}
+                  closeOnlyOnBackdropPress={true}
+                  containerStyle={styles.TTP}
+                  popover={
+                    <View>
+                      <View>
+                        <Text style={styles.txtContentTTP}>
+                          Defina uma quantidade de água. Esse valor informará a
+                          quantidade de água que você deverá ingerir a cada
+                          ciclo (notificação).
+                        </Text>
+                      </View>
+                    </View>
+                  }>
+                  <>
+                    <IconFA
+                      name="question-circle"
+                      size={10}
+                      color="#333"
+                      style={[
+                        styles.txtTitleInp,
+                        styles.iconQuestion,
+                        styles.positionIconQuestion,
+                      ]}
+                    />
+                    <Text style={styles.txtMili}>mililitros</Text>
+                  </>
+                </Tooltip>
               </View>
               <View>
                 <TouchableHighlight
@@ -327,13 +424,27 @@ const ModalConfig = (props) => {
           </View>
           {(objFinal != 'indefinido' || quantFinal != 'indefinida') && (
             <TouchableHighlight
-              onPress={() => ResetThisScreen()}
+              onPress={() => setShowRestoreAlert(true)}
               underlayColor="none"
               style={[styles.tchRestore, styles.kitJust]}>
               <IconMIC name="restore" size={18} color="#FFFFFF" />
             </TouchableHighlight>
           )}
         </View>
+
+        {showRestoreAlert && (
+          <BottomAlert
+            visible={showRestoreAlert}
+            icon="caution"
+            title="Resetar configurações"
+            text="Confirme se deseja realmente resetar as configurações desta tela"
+            closeAlert={() => setShowRestoreAlert(false)}
+            onConfirm={() => {
+              ResetThisScreen();
+              setShowRestoreAlert(false);
+            }}
+          />
+        )}
       </View>
     </Modal>
   );
