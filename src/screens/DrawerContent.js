@@ -1,30 +1,30 @@
 import React, {useState} from 'react';
-import {Drawer, TouchableRipple, Switch} from 'react-native-paper';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, TouchableHighlight, Switch} from 'react-native';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import IconI from 'react-native-vector-icons/Ionicons';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
-import {TouchableHighlight} from 'react-native-gesture-handler';
+// EXTERNAL STYLES
+import styles from '../styles/DrawerContent';
 
 const DrawerContent = (props) => {
-  const [isDark, setIsDark] = useState();
+  const [isDark, setIsDark] = useState(false);
 
   const toggleTheme = () => {
     setIsDark(!isDark);
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.vwContent}>
       <DrawerContentScrollView {...props}>
-        <Drawer.Section>
+        <View style={styles.vwSection}>
           <View style={styles.vwHeaderDrawer}>
             <Text style={styles.txtHeaderDrawer} numberOfLines={1}>
               Olá, Felipe
             </Text>
           </View>
-        </Drawer.Section>
+        </View>
 
-        <Drawer.Section>
+        <View style={styles.vwSection}>
           <DrawerItem
             icon={() => <IconI name="water" color="#FFFFFF" size={28} />}
             label="Controle de Água"
@@ -47,78 +47,42 @@ const DrawerContent = (props) => {
             labelStyle={styles.lblDrawerOptions}
             onPress={() => props.navigation.navigate('Info')}
           />
-        </Drawer.Section>
+        </View>
 
-        <Drawer.Section title="Preferências">
-          <TouchableRipple
-            rippleColor="transparent"
+        <View style={styles.vwSection} title="Preferências">
+          <Text style={styles.txtPreferences}>Preferências</Text>
+          <TouchableHighlight
+            underlayColor="none"
             style={styles.tchPrefs}
             onPress={() => toggleTheme()}>
             <View style={styles.vwDarkTheme}>
               <Text style={styles.lblDrawerOptions}>Tema Escuro</Text>
               <View pointerEvents="none">
-                <Switch color="#333333" value={isDark} />
+                <Switch
+                  disabled={true}
+                  thumbColor={isDark ? '#333' : '#DDD'}
+                  value={isDark}
+                  trackColor={{
+                    false: 'rgba(0,0,0,0.1)',
+                    true: 'rgba(0,0,0,0.3)',
+                  }}
+                />
               </View>
             </View>
-          </TouchableRipple>
-        </Drawer.Section>
+          </TouchableHighlight>
+        </View>
       </DrawerContentScrollView>
 
-      <Drawer.Section>
+      <View>
         <TouchableHighlight
           underlayColor="none"
           onPress={() => {}}
           style={styles.tchReset}>
           <Text style={styles.txtReset}>Resetar aplicação</Text>
         </TouchableHighlight>
-      </Drawer.Section>
+      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  vwHeaderDrawer: {
-    height: 70,
-    justifyContent: 'center',
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  txtHeaderDrawer: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: '#333333',
-  },
-  lblDrawerOptions: {
-    color: '#FFFFFF',
-    fontSize: 17,
-  },
-  tchPrefs: {
-    marginRight: 10,
-    marginLeft: 10,
-  },
-  vwDarkTheme: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 10,
-  },
-  tchReset: {
-    alignItems: 'center',
-    backgroundColor: '#333',
-    width: '60%',
-    alignSelf: 'center',
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 2,
-    borderRadius: 4,
-    marginBottom: 25,
-  },
-  txtReset: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-  },
-});
 
 export default DrawerContent;

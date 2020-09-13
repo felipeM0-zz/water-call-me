@@ -1,7 +1,6 @@
 import React from 'react';
-
 import {createDrawerNavigator} from '@react-navigation/drawer';
-// IMPORTED COMPONENTS
+// IMPORTED SCREENS
 import PrincipalScreen from '../screens/PrincipalScreen';
 import InfoScreen from '../screens/InfoScreen';
 import CalcScreen from '../screens/CalcScreen';

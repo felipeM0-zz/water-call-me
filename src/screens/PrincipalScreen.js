@@ -34,7 +34,7 @@ const PrincipalScreen = () => {
   const [waterFull, setWaterFull] = useState(false);
   const [timeDrink, setTimeDrink] = useState(false);
   const [cleaningHistory, setCleaningHistory] = useState(false);
-  const [showConfig, setShowConfig] = useState(true);
+  const [showConfig, setShowConfig] = useState(false);
 
   const renderItem = ({item, index}) => (
     <View style={styles.vwHistory(dmsion - 100)}>
@@ -164,19 +164,18 @@ const PrincipalScreen = () => {
     }
   };
 
-  const removeAlert = () => {
-    setCleaningHistory(false);
-    setWaterFull(false);
-    setTimeDrink(false);
-  };
-
   useEffect(() => {
     verify();
   }, [valueNow]);
 
   return (
     <SafeAreaView style={styles.savContent}>
-      {showConfig && <ModalConfig />}
+      {showConfig && (
+        <ModalConfig
+          visible={showConfig}
+          closeConfig={() => setShowConfig(false)}
+        />
+      )}
 
       {cleaningHistory && (
         <BottomAlert
@@ -185,7 +184,9 @@ const PrincipalScreen = () => {
           showKeep={verifyCountData()[2]}
           showCancel={verifyCountData()[1]}
           visible={true}
-          closeAlert={() => (verifyCountData()[3] ? removeAlert() : null)}
+          closeAlert={() =>
+            verifyCountData()[3] ? setCleaningHistory(false) : null
+          }
           clearHist={() => clearHistory()}
           title="Histórico"
           icon="historic"
@@ -198,7 +199,7 @@ const PrincipalScreen = () => {
           showConfirm={false}
           showCancel={false}
           visible={true}
-          closeAlert={() => removeAlert()}
+          closeAlert={() => setTimeDrink(false)}
           showDrink={true}
           drinkWater={() => addnew()}
           position="center"
@@ -213,7 +214,7 @@ const PrincipalScreen = () => {
           showConfirm={false}
           showCancel={true}
           visible={true}
-          closeAlert={() => removeAlert()}
+          closeAlert={() => setWaterFull(false)}
           showNew={true}
           loop={false}
           particles={true}
@@ -246,12 +247,17 @@ const PrincipalScreen = () => {
         <LinearGradient
           colors={['#47bdc9', '#92E4ED', '#92E4ED', '#47bdc9']}
           style={styles.vwContentPrincipal}>
-          <IconF
-            name="gear"
-            size={25}
-            color="#FFFFFF"
-            style={[styles.iconGear, styles.txtShadow]}
-          />
+          <TouchableHighlight
+            underlayColor="none"
+            onPress={() => setShowConfig(true)}
+            style={styles.iconGear}>
+            <IconF
+              name="gear"
+              size={25}
+              color="#FFFFFF"
+              style={styles.txtShadow}
+            />
+          </TouchableHighlight>
 
           <View style={styles.vwContentPie}>
             <Progress.Pie

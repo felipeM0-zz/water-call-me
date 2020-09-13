@@ -4,13 +4,14 @@ import IconI from 'react-native-vector-icons/Ionicons';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconMIC from 'react-native-vector-icons/MaterialCommunityIcons';
 import {TextInputMask} from 'react-native-masked-text';
+import {Tooltip} from 'react-native-elements';
 // EXTERNAL COMPONENTS
 import BallonApprox from '../components/BallonApprox';
 // EXTERNAL STYLES
 import styles from '../styles/ModalConfig';
 import {convertToNum} from '../scripts/converters';
 
-const ModalConfig = () => {
+const ModalConfig = (props) => {
   const [inputCalc, setInputCalc] = useState('');
   const [inputManual, setInputManual] = useState('');
   const [inputQuant, setInputQuant] = useState('');
@@ -108,7 +109,7 @@ const ModalConfig = () => {
 
         <View style={[styles.vwHeader, styles.kitJust]}>
           <TouchableHighlight
-            onPress={() => {}}
+            onPress={() => props.closeConfig()}
             underlayColor="none"
             style={[styles.tchBack, styles.kitJust]}>
             <IconI name="chevron-back" size={35} color="#333" />
@@ -148,7 +149,7 @@ const ModalConfig = () => {
                 <Text style={styles.txtFirstKg}>Kg</Text>
                 <Text style={styles.txtFirstX}>X</Text>
                 <View style={[styles.kitJust, styles.vw35ml]}>
-                  <TouchableHighlight onPress={() => {}} underlayColor="none">
+                  <Tooltip popover={<Text>Info here</Text>}>
                     <>
                       <IconFA
                         name="question-circle"
@@ -158,7 +159,7 @@ const ModalConfig = () => {
                       />
                       <Text style={styles.txt35ml}>35ml</Text>
                     </>
-                  </TouchableHighlight>
+                  </Tooltip>
                 </View>
                 <Text style={styles.txtEqual}>=</Text>
                 <Text style={styles.txtFirstResult}>

@@ -30,8 +30,12 @@ export default StyleSheet.create({
   },
   iconGear: {
     position: 'absolute',
-    left: 15,
-    top: 15,
+    left: 0,
+    top: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 40,
+    width: 40,
   },
   vwContentPie: {
     width: 200,
