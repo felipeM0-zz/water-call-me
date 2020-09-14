@@ -1,23 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Modal,
-  Text,
-  View,
-  TouchableHighlight,
-  ScrollView,
-  Linking,
-} from 'react-native';
+import {Modal, Text, View, TouchableHighlight, ScrollView} from 'react-native';
 import IconI from 'react-native-vector-icons/Ionicons';
-import IconFA from 'react-native-vector-icons/FontAwesome';
-import IconMIC from 'react-native-vector-icons/MaterialCommunityIcons';
-import {TextInputMask} from 'react-native-masked-text';
-import {Tooltip} from 'react-native-elements';
 // EXTERNAL COMPONENTS
 import BallonApprox from '../components/BallonApprox';
 import BottomAlert from '../components/BottomAlert';
+import CalcObjective from '../components/ModalConfigComps/CalcObjective';
+import ManualObjective from '../components/ModalConfigComps/ManualObjective';
+import ManualQuant from '../components/ModalConfigComps/ManualQuant';
+import FooterConfig from '../components/ModalConfigComps/FooterConfig';
 // EXTERNAL STYLES
 import styles from '../styles/ModalConfig';
-import {convertToNum} from '../scripts/converters';
 
 const ModalConfig = (props) => {
   const [inputCalc, setInputCalc] = useState('');
@@ -63,10 +55,6 @@ const ModalConfig = (props) => {
       : (setResultQuant('?'), setDisabledQuant(true));
   };
 
-  const closeAlert = () => {
-    setShowBallon(false);
-  };
-
   const verifyFinals = () => {
     return objFinal != 'indefinido' && quantFinal != 'indefinida'
       ? true
@@ -104,18 +92,6 @@ const ModalConfig = (props) => {
       statusBarTranslucent={true}
       onRequestClose={() => {}}>
       <View style={styles.vwContent}>
-        {showBallon && (
-          <BallonApprox
-            closeAlert={() => closeAlert()}
-            title="Por aproximação"
-            visible={showBallon}
-            onFine={(v) => {
-              setInputManual(v);
-              verifyFieldManual(v);
-            }}
-          />
-        )}
-
         <View style={[styles.vwHeader, styles.kitJust]}>
           <TouchableHighlight
             onPress={() => props.closeConfig()}
@@ -127,310 +103,60 @@ const ModalConfig = (props) => {
         </View>
         <ScrollView style={styles.svConfig}>
           <View>
-            <View style={[styles.kitJust, styles.vwGroup]}>
-              <Text style={styles.txtOption}>
-                Objetivo com base em meu peso
-              </Text>
-              <View style={styles.vwBoxOption}>
-                <View style={[styles.kitJust, styles.vwInp]}>
-                  <Text style={styles.txtTitleInp}>peso</Text>
-                  <TextInputMask
-                    keyboardType="numeric"
-                    options={{
-                      precision: 2,
-                      separator: '.',
-                      delimiter: '.',
-                      unit: '',
-                      suffixUnit: '',
-                    }}
-                    type={'money'}
-                    value={inputCalc}
-                    onChangeText={(txt) => {
-                      setInputCalc(txt);
-                      verifyFieldCalc(txt);
-                    }}
-                    maxLength={6}
-                    style={styles.inpPeso}
-                    placeholder="63,00"
-                    placeholderTextColor="rgba(0,0,0,0.15)"
-                  />
-                </View>
-                <Text style={styles.txtFirstKg}>Kg</Text>
-                <Text style={styles.txtFirstX}>X</Text>
-                <View style={[styles.kitJust, styles.vw35ml]}>
-                  <Tooltip
-                    backgroundColor="#31949e"
-                    overlayColor="rgba(250, 250, 250, 0.85)"
-                    height={110}
-                    width={180}
-                    closeOnlyOnBackdropPress={true}
-                    containerStyle={styles.TTP}
-                    popover={
-                      <View>
-                        <View>
-                          <Text style={styles.txtContentTTP}>
-                            O cálculo feito é 35 ml de água multiplicado pelo
-                            peso corporal de cada um.
-                          </Text>
-                        </View>
-                        <TouchableHighlight
-                          style={styles.tchKnowMoreTTP}
-                          underlayColor="none"
-                          onPress={() =>
-                            Linking.openURL(
-                              'https://www.conquistesuavida.com.br/noticia/agua-na-medida-certa-aprenda-a-calcular-corretamente-a-sua-hidratacao_a2245/1#:~:text=O%20c%C3%A1lculo%20feito%20%C3%A9%2035,dia%20(aproximadamente%2014%20copos).',
-                            )
-                          }>
-                          <Text style={styles.txtKnowMoreTTP}>Saiba mais</Text>
-                        </TouchableHighlight>
-                      </View>
-                    }>
-                    <>
-                      <IconFA
-                        name="question-circle"
-                        size={10}
-                        color="#333"
-                        style={[styles.txtTitleInp, styles.iconQuestion]}
-                      />
-                      <Text style={styles.txt35ml}>35ml</Text>
-                    </>
-                  </Tooltip>
-                </View>
-                <Text style={styles.txtEqual}>=</Text>
-                <Text style={styles.txtFirstResult}>
-                  {convertToNum(resultCalc)}
-                </Text>
-                <Text style={styles.txtFirstMl}>ml</Text>
-              </View>
-              <View>
-                <TouchableHighlight
-                  underlayColor="none"
-                  onPress={() => setObjFinal(convertToNum(resultCalc))}
-                  disabled={disabledCalc}
-                  style={styles.tchCalcOption(disabledCalc)}>
-                  <Text
-                    style={[
-                      styles.txtCalcOption(disabledCalc),
-                      styles.txtShadow(disabledCalc),
-                    ]}>
-                    Definir {convertToNum(resultCalc)} como objetivo
-                  </Text>
-                </TouchableHighlight>
-              </View>
-            </View>
+            <CalcObjective
+              CalcObj={(v) => setObjFinal(v)}
+              result={resultCalc}
+              disabled={disabledCalc}
+              valueInput={inputCalc}
+              stInput={(v) => setInputCalc(v)}
+              verifyCalc={(v) => verifyFieldCalc(v)}
+            />
 
             {/* ------------------------------ */}
 
-            <View style={[styles.kitJust, styles.vwGroup]}>
-              <Text style={styles.txtOption}>Objetivo manualmente</Text>
-              <View style={styles.vwBoxOption}>
-                <TextInputMask
-                  keyboardType="numeric"
-                  maxLength={5}
-                  type={'money'}
-                  options={{
-                    precision: 0,
-                    separator: '.',
-                    delimiter: '.',
-                    unit: '',
-                    suffixUnit: '',
-                  }}
-                  value={inputManual}
-                  onChangeText={(txt) => {
-                    setInputManual(txt);
-                    verifyFieldManual(txt);
-                  }}
-                  style={[styles.inpPeso, styles.inpObjManual]}
-                  placeholder="1.800"
-                  placeholderTextColor="rgba(0,0,0,0.15)"
-                />
-                <Tooltip
-                  backgroundColor="#31949e"
-                  overlayColor="rgba(250, 250, 250, 0.85)"
-                  height={190}
-                  width={185}
-                  closeOnlyOnBackdropPress={true}
-                  containerStyle={styles.TTP}
-                  popover={
-                    <View>
-                      <Text style={styles.txtContentTTP}>
-                        Defina um valor manual como seu objetivo. Esse valor irá
-                        determinar os ciclos que você fará até chegar ao fim
-                        dele. Use o botão{' '}
-                        <IconMIC name="approximately-equal-box" size={15} />{' '}
-                        abaixo caso queira definir o objetivo por aproximação,
-                        que iremos lhe recomendar alguns objetivos.
-                      </Text>
-                    </View>
-                  }>
-                  <>
-                    <IconFA
-                      name="question-circle"
-                      size={10}
-                      color="#333"
-                      style={[
-                        styles.txtTitleInp,
-                        styles.iconQuestion,
-                        styles.positionIconQuestion,
-                      ]}
-                    />
-                    <Text style={styles.txtMili}>mililitros</Text>
-                  </>
-                </Tooltip>
-              </View>
-              <View style={styles.vwContentManual}>
-                <TouchableHighlight
-                  underlayColor="none"
-                  onPress={() => setObjFinal(convertToNum(resultManual))}
-                  disabled={disabledManual}
-                  style={styles.tchCalcOption(disabledManual)}>
-                  <Text
-                    style={[
-                      styles.txtCalcOption(disabledManual),
-                      styles.txtShadow(disabledManual),
-                    ]}>
-                    Definir {resultManual} como objetivo
-                  </Text>
-                </TouchableHighlight>
-                <TouchableHighlight
-                  underlayColor="none"
-                  onPress={() => setShowBallon(true)}
-                  style={styles.tchCalcOption(false)}>
-                  <Text
-                    style={[
-                      styles.txtCalcOption(false),
-                      styles.txtShadow(false),
-                    ]}>
-                    <IconMIC name="approximately-equal-box" size={25} />
-                  </Text>
-                </TouchableHighlight>
-              </View>
-            </View>
+            <ManualObjective
+              ManualObj={(v) => setObjFinal(v)}
+              result={resultManual}
+              disabled={disabledManual}
+              valueInput={inputManual}
+              stInput={(v) => setInputManual(v)}
+              verifyManual={(v) => verifyFieldManual(v)}
+              showApprox={() => setShowBallon(true)}
+            />
 
             {/* ------------------------------ */}
 
-            <View style={[styles.kitJust, styles.vwGroup]}>
-              <Text style={styles.txtOption}>Definir quantidade</Text>
-              <View style={styles.vwBoxOption}>
-                <TextInputMask
-                  type={'only-numbers'}
-                  value={inputQuant}
-                  onChangeText={(txt) => {
-                    setInputQuant(txt);
-                    verifyFieldQuant(txt);
-                  }}
-                  keyboardType="numeric"
-                  maxLength={3}
-                  style={[styles.inpPeso, styles.inpQuant]}
-                  placeholder="200"
-                  placeholderTextColor="rgba(0,0,0,0.15)"
-                />
-
-                <Tooltip
-                  backgroundColor="#31949e"
-                  overlayColor="rgba(250, 250, 250, 0.85)"
-                  height={125}
-                  width={180}
-                  closeOnlyOnBackdropPress={true}
-                  containerStyle={styles.TTP}
-                  popover={
-                    <View>
-                      <View>
-                        <Text style={styles.txtContentTTP}>
-                          Defina uma quantidade de água. Esse valor informará a
-                          quantidade de água que você deverá ingerir a cada
-                          ciclo (notificação).
-                        </Text>
-                      </View>
-                    </View>
-                  }>
-                  <>
-                    <IconFA
-                      name="question-circle"
-                      size={10}
-                      color="#333"
-                      style={[
-                        styles.txtTitleInp,
-                        styles.iconQuestion,
-                        styles.positionIconQuestion,
-                      ]}
-                    />
-                    <Text style={styles.txtMili}>mililitros</Text>
-                  </>
-                </Tooltip>
-              </View>
-              <View>
-                <TouchableHighlight
-                  underlayColor="none"
-                  onPress={() => setQuantFinal(resultQuant)}
-                  disabled={disabledQuant}
-                  style={styles.tchCalcOption(disabledQuant)}>
-                  <Text
-                    style={[
-                      styles.txtCalcOption(disabledQuant),
-                      styles.txtShadow(disabledQuant),
-                    ]}>
-                    Definir {resultQuant} como quantidade
-                  </Text>
-                </TouchableHighlight>
-              </View>
-            </View>
+            <ManualQuant
+              ManualQuant={(v) => setQuantFinal(v)}
+              result={resultQuant}
+              disabled={disabledQuant}
+              valueInput={inputQuant}
+              stInput={(v) => setInputQuant(v)}
+              verifyQuant={(v) => verifyFieldQuant(v)}
+            />
           </View>
         </ScrollView>
         <View style={styles.vwFooter}>
-          <Text style={styles.txtTitleFooter}>
-            Configurado até o momento...
-          </Text>
-
-          <View style={styles.vwContentFooter}>
-            <View style={styles.vwBoxLeft}>
-              <View>
-                <Text style={styles.txtInfoLeft}>
-                  Objetivo:{' '}
-                  <Text style={styles.txtObjFinal(objFinal)}>{objFinal} </Text>
-                  {objFinal != 'indefinido' && (
-                    <IconI name="checkmark" size={18} color="#10ee10" />
-                  )}
-                </Text>
-                <Text style={styles.txtInfoLeft}>
-                  Quantidade:{' '}
-                  <Text style={styles.txtQuantFinal(quantFinal)}>
-                    {quantFinal}{' '}
-                  </Text>
-                  {quantFinal != 'indefinida' && (
-                    <IconI name="checkmark" size={18} color="#10ee10" />
-                  )}
-                </Text>
-                {resultGlass[0] && (
-                  <Text style={styles.txtInfoLeft}>
-                    Em torno de{' '}
-                    <Text style={styles.txtResultFinal}>{resultGlass[1]}</Text>{' '}
-                    copos
-                  </Text>
-                )}
-              </View>
-            </View>
-            <View style={styles.vwBoxRight}>
-              <TouchableHighlight underlayColor="none" onPress={() => {}}>
-                <IconI
-                  name="checkmark-circle"
-                  size={90}
-                  disabled={verifyFinals() ? false : true}
-                  color={verifyFinals() ? '#31949e' : 'rgba(0,0,0,0.1)'}
-                  style={styles.txtShadow(verifyFinals() ? false : true)}
-                />
-              </TouchableHighlight>
-            </View>
-          </View>
-          {(objFinal != 'indefinido' || quantFinal != 'indefinida') && (
-            <TouchableHighlight
-              onPress={() => setShowRestoreAlert(true)}
-              underlayColor="none"
-              style={[styles.tchRestore, styles.kitJust]}>
-              <IconMIC name="restore" size={18} color="#FFFFFF" />
-            </TouchableHighlight>
-          )}
+          <FooterConfig
+            objFinal={objFinal}
+            quantFinal={quantFinal}
+            resultGlass={[resultGlass[0], resultGlass[1]]}
+            Finals={verifyFinals()}
+            restore={() => setShowRestoreAlert(true)}
+          />
         </View>
+
+        {showBallon && (
+          <BallonApprox
+            closeAlert={() => setShowBallon(false)}
+            title="Por aproximação"
+            visible={showBallon}
+            onFine={(v) => {
+              setInputManual(v);
+              verifyFieldManual(v);
+            }}
+          />
+        )}
 
         {showRestoreAlert && (
           <BottomAlert
