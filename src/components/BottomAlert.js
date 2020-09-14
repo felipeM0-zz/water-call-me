@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Lottie from 'lottie-react-native';
 // import {translate} from '../locales';
 // IMAGES JSON
-// import success from '../images/JSON/success.json';
+import gears from '../images/JSON/gears.json';
 import completed from '../images/JSON/cicle-completed.json';
 import timedrink from '../images/JSON/time-drinkwater.json';
 import historic from '../images/JSON/historic.json';
@@ -44,16 +44,16 @@ export default (props) => {
         ? completed
         : props.icon == 'caution'
         ? caution
-        : props.icon == 'think'
-        ? think
+        : props.icon == 'gears'
+        ? gears
         : null;
     return icon;
   };
 
   const corInfo = () => {
     let req = props.icon == 'caution',
-      bgc = req ? '#c22f47' : '#90ee90',
-      txt = req ? '#FFFFFF' : '#006400';
+      bgc = req ? '#c22f47' : '#31949e',
+      txt = req ? '#FFFFFF' : '#FFFFFF';
     return [bgc, txt];
   };
 

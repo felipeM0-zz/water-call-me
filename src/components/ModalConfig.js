@@ -8,7 +8,6 @@ import CalcObjective from '../components/ModalConfigComps/CalcObjective';
 import ManualObjective from '../components/ModalConfigComps/ManualObjective';
 import ManualQuant from '../components/ModalConfigComps/ManualQuant';
 import FooterConfig from '../components/ModalConfigComps/FooterConfig';
-import {Calendar, CalendarList} from 'react-native-calendars';
 // EXTERNAL STYLES
 import styles from '../styles/ModalConfig';
 
@@ -27,16 +26,7 @@ const ModalConfig = (props) => {
   const [quantFinal, setQuantFinal] = useState('indefinida');
   const [resultGlass, setResultGlass] = useState([false, '']);
   const [showRestoreAlert, setShowRestoreAlert] = useState(false);
-  const [markDays, setMarkDays] = useState({});
-
-  const onPressDay = (day) => {
-    let markedDate = {};
-    markedDate[day.dateString] = {
-      selected: true,
-      selectedColor: '#00B0BF',
-    };
-    setMarkDays(markedDate);
-  };
+  const [showInit, setShowInit] = useState(false);
 
   const verifyFieldCalc = (num) => {
     setResultManual('?');
@@ -145,26 +135,6 @@ const ModalConfig = (props) => {
               stInput={(v) => setInputQuant(v)}
               verifyQuant={(v) => verifyFieldQuant(v)}
             />
-
-            {/* ------------------------------ */}
-
-            <View
-              style={{
-                width: '80%',
-                alignSelf: 'center',
-                marginTop: 10,
-              }}>
-              <Calendar
-                minDate={new Date()}
-                maxDate={
-                  new Date(new Date().setMonth(new Date().getMonth() + 1))
-                }
-                onDayPress={(day) => {
-                  onPressDay(day);
-                }}
-                markedDates={markDays}
-              />
-            </View>
           </View>
         </ScrollView>
         <View style={styles.vwFooter}>
@@ -174,6 +144,7 @@ const ModalConfig = (props) => {
             resultGlass={[resultGlass[0], resultGlass[1]]}
             Finals={verifyFinals()}
             restore={() => setShowRestoreAlert(true)}
+            initWater={() => setShowInit(true)}
           />
         </View>
 
@@ -185,6 +156,22 @@ const ModalConfig = (props) => {
             onFine={(v) => {
               setInputManual(v);
               verifyFieldManual(v);
+            }}
+          />
+        )}
+
+        {showInit && (
+          <BottomAlert
+            visible={showInit}
+            icon="gears"
+            title="Confirmar início"
+            text="Confirme se deseja realmente iniciar os ciclos conforme estas configurações"
+            closeAlert={() => setShowRestoreAlert(false)}
+            onConfirm={() => {
+              // InitConfig();
+              setShowInit(false);
+              props.closeConfig();
+              props.initCicles();
             }}
           />
         )}

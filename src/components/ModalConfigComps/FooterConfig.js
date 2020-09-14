@@ -41,7 +41,9 @@ const FooterConfig = (props) => {
           </View>
         </View>
         <View style={styles.vwBoxRight}>
-          <TouchableHighlight underlayColor="none" onPress={() => {}}>
+          <TouchableHighlight
+            underlayColor="none"
+            onPress={() => props.initWater()}>
             <IconI
               name="checkmark-circle"
               size={90}

@@ -3,6 +3,7 @@ import {View, Text, TouchableHighlight, Switch} from 'react-native';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import IconI from 'react-native-vector-icons/Ionicons';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconIons from 'react-native-vector-icons/Ionicons';
 // EXTERNAL STYLES
 import styles from '../styles/DrawerContent';
 
@@ -46,6 +47,14 @@ const DrawerContent = (props) => {
             label="Dicas"
             labelStyle={styles.lblDrawerOptions}
             onPress={() => props.navigation.navigate('Info')}
+          />
+          <DrawerItem
+            icon={() => (
+              <IconIons name="notifications-circle" color="#FFFFFF" size={28} />
+            )}
+            label="Teste de Notificações"
+            labelStyle={styles.lblDrawerOptions}
+            onPress={() => props.navigation.navigate('Notification')}
           />
         </View>
 

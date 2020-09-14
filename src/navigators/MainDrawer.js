@@ -4,6 +4,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import PrincipalScreen from '../screens/PrincipalScreen';
 import InfoScreen from '../screens/InfoScreen';
 import CalcScreen from '../screens/CalcScreen';
+import Notif from '../../notification';
 
 import DrawerContent from '../screens/DrawerContent';
 
@@ -18,6 +19,7 @@ export default () => {
       <MainDrawer.Screen name="Principal" component={PrincipalScreen} />
       <MainDrawer.Screen name="Info" component={InfoScreen} />
       <MainDrawer.Screen name="Calc" component={CalcScreen} />
+      <MainDrawer.Screen name="Notification" component={Notif} />
     </MainDrawer.Navigator>
   );
 };

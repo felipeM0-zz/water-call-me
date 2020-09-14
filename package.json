@@ -20,7 +20,6 @@
     "npm-check-updates": "^9.0.1",
     "react": "16.13.1",
     "react-native": "0.63.2",
-    "react-native-calendars": "^1.403.0",
     "react-native-elements": "^2.3.2",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-linear-gradient": "^2.5.6",

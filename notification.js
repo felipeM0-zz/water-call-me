@@ -7,6 +7,7 @@ import {
   Platform,
 } from 'react-native';
 import PushNotification from 'react-native-push-notification';
+import moment from 'moment';
 
 export default () => {
   useState(() => {
@@ -17,7 +18,6 @@ export default () => {
 
       onNotification: function (notification) {
         console.log('NOTIFICATION:', notification);
-        // notification.finish(PushNotificationIOS.FetchResult.NoData);
       },
 
       onAction: function (notification) {
@@ -34,6 +34,10 @@ export default () => {
       popInitialNotification: true,
       requestPermissions: Platform.OS === 'ios',
     });
+
+    // console.log(
+    //   moment(new Date(Date.now() + 7200 * 1000)).format('DD/MM/YY hh:mm:ss a'),
+    // );
   }, []);
 
   const testPush = () => {
@@ -50,12 +54,11 @@ export default () => {
   const testTimePush = () => {
     PushNotification.localNotificationSchedule({
       message: 'Hora de beber mais água!',
-      date: new Date(Date.now() + 5 * 1000),
-      // repeatType: 'minute',
-      // repeatTime: 1,
+      date: new Date(Date.now() + 10 * 1000), // 10secs
+      repeatType: 'minute',
+      repeatTime: 1,
       allowWhileIdle: true,
-      soundName: 'water'
-      // date: new Date(Date.now() + 10 * 1000), // in 10 secs
+      soundName: 'water',
     });
   };
 

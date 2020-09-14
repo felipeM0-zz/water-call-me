@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   }),
   vwGroup: {
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   txtMili: {
     marginLeft: 5,

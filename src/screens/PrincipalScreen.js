@@ -25,7 +25,7 @@ const PrincipalScreen = () => {
   const navigation = useNavigation();
   const dmsion = Dimensions.get('screen').width;
 
-  const [valueNow, setValueNow] = useState(2300);
+  const [valueNow, setValueNow] = useState(1500);
   const [valueObj, setValueObj] = useState(2500);
   const [valueIncrement, setValueIncrement] = useState(200);
   const [haveHistory, setHaveHistory] = useState(true);
@@ -47,23 +47,24 @@ const PrincipalScreen = () => {
     </View>
   );
 
-  const EmptyComponent = () => (
-    <View style={styles.vwEmpty}>
-      <Lottie
-        speed={0.3}
-        source={require('../images/JSON/circle-water.json')}
-        autoPlay
-        loop
-        autoSize
-        resizeMode="center"
-        // style={{backgroundColor:'#333333'}} // QUANDO ESTIVER #474747
-        // style={{backgroundColor:'#FFFFFF'}} // QUANDO ESTIVER #FFFFFF
-      />
-      <Text style={[styles.txtEmpty, styles.txtShadow]}>
-        Sem histórico,{'\n'}beba água!
-      </Text>
-    </View>
-  );
+  const EmptyComponent = () =>
+    !showConfig ? (
+      <View style={styles.vwEmpty}>
+        <Lottie
+          speed={0.3}
+          source={require('../images/JSON/circle-water.json')}
+          autoPlay
+          loop
+          autoSize
+          resizeMode="center"
+          // style={{backgroundColor:'#333333'}} // QUANDO ESTIVER #474747
+          // style={{backgroundColor:'#FFFFFF'}} // QUANDO ESTIVER #FFFFFF
+        />
+        <Text style={[styles.txtEmpty, styles.txtShadow]}>
+          Sem histórico,{'\n'}beba água!
+        </Text>
+      </View>
+    ) : null;
 
   const verify = async () => {
     try {
@@ -174,6 +175,7 @@ const PrincipalScreen = () => {
         <ModalConfig
           visible={showConfig}
           closeConfig={() => setShowConfig(false)}
+          initCicles={() => setTimeDrink(true)}
         />
       )}
 
