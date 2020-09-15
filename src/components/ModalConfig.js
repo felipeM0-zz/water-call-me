@@ -166,7 +166,7 @@ const ModalConfig = (props) => {
             icon="gears"
             title="Confirmar início"
             text="Confirme se deseja realmente iniciar os ciclos conforme estas configurações"
-            closeAlert={() => setShowRestoreAlert(false)}
+            closeAlert={() => setShowInit(false)}
             onConfirm={() => {
               // InitConfig();
               setShowInit(false);
