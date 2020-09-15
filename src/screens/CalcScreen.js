@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -11,9 +11,29 @@ import {
 import IconIon from 'react-native-vector-icons/Ionicons';
 import IconMIC from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFA5 from 'react-native-vector-icons/FontAwesome5';
+import * as Progress from 'react-native-progress';
+import {convertInputsIMC} from '../scripts/converters';
 
 const PrincipalScreen = () => {
   const navigation = useNavigation();
+
+  const [inpWeight, setInpWeight] = useState('');
+  const [inpHeight, setInpHeight] = useState('');
+  const [disabledCalc, setDisabledCalc] = useState(true);
+  const [resultIMC, setResultIMC] = useState(false);
+
+  const convertNumbers = () => {
+    let weight = Number(inpWeight.replace(',', '.'));
+    let height = Number(inpHeight.replace(',', '.'));
+    return [weight, height];
+  };
+
+  useEffect(() => {
+    convertNumbers()[0] != 0 && convertNumbers()[1] != 0
+      ? setDisabledCalc(false)
+      : setDisabledCalc(true),
+      setResultIMC(false);
+  }, [inpHeight, inpWeight]);
 
   return (
     <SafeAreaView style={styles.vwContent}>
@@ -30,10 +50,11 @@ const PrincipalScreen = () => {
             style={styles.txtShadow}
             name="menu"
             size={30}
-            color="#92E4ED"
+            color="#31949e"
           />
         </TouchableHighlight>
       </View>
+      {/* BODY CONTENT */}
       <View style={styles.vwSuperiorBox}>
         <View style={styles.vwBoxInputs}>
           <View style={styles.vwBoxInput}>
@@ -46,9 +67,13 @@ const PrincipalScreen = () => {
                 style={styles.txtShadow}
               />
               <TextInput
-                maxLength={5}
+                maxLength={6}
                 keyboardType="numeric"
                 style={styles.inpWeight}
+                value={inpWeight}
+                onChangeText={(v) => setInpWeight(convertInputsIMC(v))}
+                placeholder="63,00"
+                placeholderTextColor={'rgba(0,0,0,0.2)'}
               />
             </View>
             <View style={styles.vwBoxRightInside}>
@@ -74,17 +99,78 @@ const PrincipalScreen = () => {
                 color="#FFFFFF"
                 style={styles.txtShadow}
               />
-              <TextInput
-                maxLength={5}
-                keyboardType="numeric"
-                style={styles.inpWeight}
-              />
+              <View>
+                <TextInput
+                  maxLength={5}
+                  value={inpHeight}
+                  onChangeText={(v) => setInpHeight(convertInputsIMC(v))}
+                  keyboardType="numeric"
+                  style={styles.inpWeight}
+                  placeholder="1,73"
+                  placeholderTextColor={'rgba(0,0,0,0.2)'}
+                />
+                <View
+                  style={{
+                    backgroundColor: '#FFFFFF',
+                    paddingRight: 3.7,
+                    paddingLeft: 3.7,
+                    paddingBottom: 1,
+                    borderRadius: 10,
+                    borderWidth: 2,
+                    borderColor: '#1d6970',
+                    position: 'absolute',
+                    right: -3,
+                    top: 0,
+                  }}>
+                  <Text
+                    style={{fontSize: 7, fontWeight: 'bold', color: '#1d6970'}}>
+                    2
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.vwBoxRightInside}>
+            <View style={[styles.vwBoxRightInside]}>
               <Text style={[styles.txtRightInside, styles.txtShadow]}>m</Text>
             </View>
           </View>
         </View>
+
+        <View style={styles.vwBtnCalc}>
+          <TouchableHighlight
+            onPress={() => setResultIMC(true)}
+            disabled={disabledCalc}
+            underlayColor="none"
+            style={styles.tchCalc(disabledCalc)}>
+            <Text style={styles.txtTchCalc(disabledCalc)}>Calcular</Text>
+          </TouchableHighlight>
+        </View>
+
+        {resultIMC && (
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <View style={styles.vwContentPie}>
+              <Progress.Pie
+                progress={
+                  convertNumbers()[0] /
+                  (convertNumbers()[1] * convertNumbers()[1]) /
+                  100
+                }
+                borderWidth={0}
+                size={190}
+                color="rgba(146, 228, 237,0.6)"
+                style={styles.pieGraph}
+              />
+              <View style={styles.vwBackWhite}>
+                <Text style={[styles.txtCenterPrincipal, styles.txtShadow]}>
+                  Seu IMC:{' '}
+                  {(
+                    convertNumbers()[0] /
+                    (convertNumbers()[1] * convertNumbers()[1])
+                  ).toFixed(2)}
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -108,7 +194,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     width: '100%',
     textAlign: 'center',
-    color: '#7bcbd4',
+    color: '#31949e',
   },
   tchHeaderMenu: {
     width: 60,
@@ -119,8 +205,8 @@ const styles = StyleSheet.create({
   },
   txtShadow: {
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: {width: -0.8, height: 0.8},
-    textShadowRadius: 1,
+    textShadowOffset: {width: -0.5, height: 0.5},
+    textShadowRadius: 2,
   },
   vwBoxInputs: {
     flexDirection: 'row',
@@ -165,12 +251,56 @@ const styles = StyleSheet.create({
     backgroundColor: '#31949e',
     width: '80%',
     borderRadius: 10,
-    paddingBottom: 15
+    paddingBottom: 15,
   },
   vwBoxDivide: {
     alignSelf: 'flex-end',
     marginRight: 15,
     marginLeft: 15,
+  },
+  vwBtnCalc: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  tchCalc: (disabled) => ({
+    backgroundColor: disabled ? 'rgba(255,255,255,0.7)' : '#FFFFFF',
+    padding: 5,
+    paddingRight: 20,
+    paddingLeft: 20,
+    borderRadius: 20,
+    elevation: 3,
+  }),
+  txtTchCalc: (disabled) => ({
+    fontSize: 18,
+    color: disabled ? 'rgba(51,51,51,0.15)' : '#31949e',
+    fontWeight: 'bold',
+  }),
+  vwContentPie: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    elevation: 2,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pieGraph: {
+    borderRadius: 100,
+  },
+  vwBackWhite: {
+    height: 170,
+    width: 170,
+    backgroundColor: '#FFFFFF',
+    position: 'absolute',
+    borderRadius: 85,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txtCenterPrincipal: {
+    fontSize: 25,
+    color: '#92E4ED',
   },
 });
 
