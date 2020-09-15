@@ -21,12 +21,25 @@ const PrincipalScreen = () => {
   const [inpHeight, setInpHeight] = useState('');
   const [disabledCalc, setDisabledCalc] = useState(true);
   const [resultIMC, setResultIMC] = useState(false);
+  const [showResult, setShowResult] = useState(true);
 
   const convertNumbers = () => {
     let weight = Number(inpWeight.replace(',', '.'));
     let height = Number(inpHeight.replace(',', '.'));
     return [weight, height];
   };
+
+  const IMCFinal = () => {
+    return convertNumbers()[0] / (convertNumbers()[1] * convertNumbers()[1]);
+  };
+
+  useEffect(() => {
+    resultIMC
+      ? setTimeout(() => {
+          setShowResult(false);
+        }, 500)
+      : null;
+  }, [resultIMC]);
 
   useEffect(() => {
     convertNumbers()[0] != 0 && convertNumbers()[1] != 0
@@ -146,26 +159,28 @@ const PrincipalScreen = () => {
         </View>
 
         {resultIMC && (
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 20,
+              marginBottom: 10,
+            }}>
             <View style={styles.vwContentPie}>
               <Progress.Pie
-                progress={
-                  convertNumbers()[0] /
-                  (convertNumbers()[1] * convertNumbers()[1]) /
-                  100
-                }
+                progress={!showResult ? IMCFinal() / 100 : 0}
                 borderWidth={0}
+                indeterminate={showResult}
                 size={190}
-                color="rgba(146, 228, 237,0.6)"
+                unfilledColor="rgba(51,51,51,0.05)"
+                color="#31949e"
                 style={styles.pieGraph}
               />
               <View style={styles.vwBackWhite}>
-                <Text style={[styles.txtCenterPrincipal, styles.txtShadow]}>
-                  Seu IMC:{' '}
-                  {(
-                    convertNumbers()[0] /
-                    (convertNumbers()[1] * convertNumbers()[1])
-                  ).toFixed(2)}
+                <Text style={styles.txtCenterPrincipal}>
+                  {!showResult
+                    ? 'Seu IMC\n' + IMCFinal().toFixed(2).replace('.', ',')
+                    : 'Calculando'}
                 </Text>
               </View>
             </View>
@@ -300,7 +315,9 @@ const styles = StyleSheet.create({
   },
   txtCenterPrincipal: {
     fontSize: 25,
-    color: '#92E4ED',
+    color: '#31949e',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

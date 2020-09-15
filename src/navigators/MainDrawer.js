@@ -17,6 +17,7 @@ export default () => {
     <MainDrawer.Navigator
       drawerStyle={{backgroundColor: '#3e929c'}}
       drawerType="back"
+      initialRouteName="Calc"
       edgeWidth={widthScreen}
       drawerContent={(props) => <DrawerContent {...props} />}>
       <MainDrawer.Screen name="Principal" component={PrincipalScreen} />
