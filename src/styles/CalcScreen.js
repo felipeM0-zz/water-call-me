@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   vwBtnCalc: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 30,
     marginBottom: 10,
   },
   tchCalc: (disabled) => ({
@@ -154,6 +154,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 10,
+  },
+  btnRemoveIMC: {
+    height: 25,
+    width: 25,
+    backgroundColor: '#FFFFFF',
+    position: 'absolute',
+    bottom: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

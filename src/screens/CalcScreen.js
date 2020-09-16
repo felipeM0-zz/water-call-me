@@ -24,6 +24,7 @@ const PrincipalScreen = () => {
   const [disabledCalc, setDisabledCalc] = useState(true);
   const [resultIMC, setResultIMC] = useState(false);
   const [showResult, setShowResult] = useState(true);
+  const [showRemoveIMC, setShowRemoveIMC] = useState(false);
 
   const convertNumbers = () => {
     let weight = Number(inpWeight.replace(',', '.'));
@@ -34,14 +35,6 @@ const PrincipalScreen = () => {
   const IMCFinal = () => {
     return convertNumbers()[0] / (convertNumbers()[1] * convertNumbers()[1]);
   };
-
-  useEffect(() => {
-    resultIMC
-      ? setTimeout(() => {
-          setShowResult(false);
-        }, 1000)
-      : null;
-  }, [resultIMC]);
 
   const PiesIMC = () => {
     let colors = ['#660000', '#b30000', '#ff0000', '#ff4d4d', '#ff9999'];
@@ -66,10 +59,12 @@ const PrincipalScreen = () => {
   };
 
   useEffect(() => {
+    setResultIMC(false);
+    setShowResult(true);
+    setShowRemoveIMC(false);
     convertNumbers()[0] != 0 && convertNumbers()[1] != 0
       ? setDisabledCalc(false)
-      : setDisabledCalc(true),
-      setResultIMC(false);
+      : setDisabledCalc(true);
   }, [inpHeight, inpWeight]);
 
   return (
@@ -159,7 +154,13 @@ const PrincipalScreen = () => {
 
         <View style={styles.vwBtnCalc}>
           <TouchableHighlight
-            onPress={() => setResultIMC(true)}
+            onPress={() => {
+              setResultIMC(true);
+              setTimeout(() => {
+                setShowResult(false);
+                setShowRemoveIMC(true);
+              }, 1000);
+            }}
             disabled={disabledCalc}
             underlayColor="none"
             style={styles.tchCalc(disabledCalc)}>
@@ -191,6 +192,19 @@ const PrincipalScreen = () => {
                     : 'Calculando'}
                 </Text>
               </View>
+              {showRemoveIMC && (
+                <TouchableHighlight
+                  onPress={() => {
+                    setResultIMC(false);
+                    setShowResult(true);
+                    setDisabledCalc(false);
+                    setShowRemoveIMC(false);
+                  }}
+                  underlayColor="none"
+                  style={styles.btnRemoveIMC}>
+                  <IconIon name="close" size={17} color="#31949e" />
+                </TouchableHighlight>
+              )}
             </View>
           </View>
         )}
