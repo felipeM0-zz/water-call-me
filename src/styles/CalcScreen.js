@@ -1,0 +1,160 @@
+import {StyleSheet} from 'react-native';
+
+const styles = StyleSheet.create({
+  vwContent: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+  },
+  headerPrincipal: {
+    height: 60,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  txtHeaderPrincipal: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    width: '100%',
+    textAlign: 'center',
+    color: '#31949e',
+  },
+  tchHeaderMenu: {
+    width: 60,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+  },
+  txtShadow: {
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: {width: -0.5, height: 0.5},
+    textShadowRadius: 2,
+  },
+  vwBoxInputs: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  vwBoxInput: {
+    flexDirection: 'row',
+  },
+  txtTopIcon: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  inpWeight: {
+    height: 40,
+    padding: 0,
+    width: 80,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 3,
+    borderColor: '#1d6970',
+    textAlign: 'center',
+    color: '#1d6970',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  vwBoxRightInside: {
+    justifyContent: 'flex-end',
+  },
+  txtRightInside: {
+    fontSize: 17,
+    marginLeft: 2,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  vwBoxIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  vwSuperiorBox: {
+    padding: 10,
+    backgroundColor: '#31949e',
+    width: '85%',
+    borderRadius: 10,
+    paddingBottom: 15,
+  },
+  vwBoxDivide: {
+    alignSelf: 'flex-end',
+    marginRight: 15,
+    marginLeft: 15,
+  },
+  vwBtnCalc: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  tchCalc: (disabled) => ({
+    backgroundColor: disabled ? 'rgba(255,255,255,0.7)' : '#FFFFFF',
+    padding: 5,
+    paddingRight: 20,
+    paddingLeft: 20,
+    borderRadius: 20,
+    elevation: 3,
+  }),
+  txtTchCalc: (disabled) => ({
+    fontSize: 18,
+    color: disabled ? 'rgba(51,51,51,0.15)' : '#31949e',
+    fontWeight: 'bold',
+  }),
+  vwContentPie: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    elevation: 2,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pieGraph: {
+    borderRadius: 100,
+  },
+  vwBackWhite: {
+    height: 140,
+    width: 140,
+    backgroundColor: '#FFFFFF',
+    position: 'absolute',
+    borderRadius: 85,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  vwBackWhitePies: {
+    height: 170,
+    width: 170,
+  },
+  txtCenterPrincipal: {
+    fontSize: 25,
+    color: '#31949e',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  vwNumberHeight: {
+    backgroundColor: '#FFFFFF',
+    paddingRight: 3.7,
+    paddingLeft: 3.7,
+    paddingBottom: 1,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#1d6970',
+    position: 'absolute',
+    right: -3,
+    top: 0,
+  },
+  txtNumberHeight: {
+    fontSize: 7,
+    fontWeight: 'bold',
+    color: '#1d6970',
+  },
+  vwBoxPie: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+});
+
+export default styles;

@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   Text,
-  StyleSheet,
   View,
   TouchableHighlight,
   TextInput,
@@ -12,7 +11,10 @@ import IconIon from 'react-native-vector-icons/Ionicons';
 import IconMIC from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFA5 from 'react-native-vector-icons/FontAwesome5';
 import * as Progress from 'react-native-progress';
+// EXTERNAL SCRIPTS
 import {convertInputsIMC} from '../scripts/converters';
+// EXTERNAL STYLES
+import styles from '../styles/CalcScreen';
 
 const PrincipalScreen = () => {
   const navigation = useNavigation();
@@ -37,9 +39,31 @@ const PrincipalScreen = () => {
     resultIMC
       ? setTimeout(() => {
           setShowResult(false);
-        }, 500)
+        }, 1000)
       : null;
   }, [resultIMC]);
+
+  const PiesIMC = () => {
+    let colors = ['#660000', '#b30000', '#ff0000', '#ff4d4d', '#ff9999'];
+    let sizes = [0.4, 0.399, 0.299, 0.249, 0.185];
+    let pies = [];
+
+    for (let i = 0; i < colors.length; i++) {
+      pies.push(
+        <Progress.Pie
+          progress={sizes[i]}
+          borderWidth={0}
+          size={160}
+          unfilledColor={colors[i] == '#660000' ? '#660000' : ''}
+          color={colors[i]}
+          style={[styles.pieGraph, {position: 'absolute'}]}
+          key={i}
+        />,
+      );
+    }
+
+    return pies;
+  };
 
   useEffect(() => {
     convertNumbers()[0] != 0 && convertNumbers()[1] != 0
@@ -122,23 +146,8 @@ const PrincipalScreen = () => {
                   placeholder="1,73"
                   placeholderTextColor={'rgba(0,0,0,0.2)'}
                 />
-                <View
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    paddingRight: 3.7,
-                    paddingLeft: 3.7,
-                    paddingBottom: 1,
-                    borderRadius: 10,
-                    borderWidth: 2,
-                    borderColor: '#1d6970',
-                    position: 'absolute',
-                    right: -3,
-                    top: 0,
-                  }}>
-                  <Text
-                    style={{fontSize: 7, fontWeight: 'bold', color: '#1d6970'}}>
-                    2
-                  </Text>
+                <View style={styles.vwNumberHeight}>
+                  <Text style={styles.txtNumberHeight}>2</Text>
                 </View>
               </View>
             </View>
@@ -159,13 +168,7 @@ const PrincipalScreen = () => {
         </View>
 
         {resultIMC && (
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 20,
-              marginBottom: 10,
-            }}>
+          <View style={styles.vwBoxPie}>
             <View style={styles.vwContentPie}>
               <Progress.Pie
                 progress={!showResult ? IMCFinal() / 100 : 0}
@@ -176,6 +179,11 @@ const PrincipalScreen = () => {
                 color="#31949e"
                 style={styles.pieGraph}
               />
+
+              <View style={[styles.vwBackWhite, styles.vwBackWhitePies]}>
+                <PiesIMC />
+              </View>
+
               <View style={styles.vwBackWhite}>
                 <Text style={styles.txtCenterPrincipal}>
                   {!showResult
@@ -190,135 +198,5 @@ const PrincipalScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  vwContent: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-  },
-  headerPrincipal: {
-    height: 60,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  txtHeaderPrincipal: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    width: '100%',
-    textAlign: 'center',
-    color: '#31949e',
-  },
-  tchHeaderMenu: {
-    width: 60,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-  },
-  txtShadow: {
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: {width: -0.5, height: 0.5},
-    textShadowRadius: 2,
-  },
-  vwBoxInputs: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  vwBoxInput: {
-    flexDirection: 'row',
-  },
-  txtTopIcon: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
-  inpWeight: {
-    height: 40,
-    padding: 0,
-    width: 80,
-    borderRadius: 20,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 3,
-    borderColor: '#1d6970',
-    textAlign: 'center',
-    color: '#1d6970',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  vwBoxRightInside: {
-    justifyContent: 'flex-end',
-  },
-  txtRightInside: {
-    fontSize: 17,
-    marginLeft: 2,
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
-  vwBoxIcon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  vwSuperiorBox: {
-    padding: 10,
-    backgroundColor: '#31949e',
-    width: '80%',
-    borderRadius: 10,
-    paddingBottom: 15,
-  },
-  vwBoxDivide: {
-    alignSelf: 'flex-end',
-    marginRight: 15,
-    marginLeft: 15,
-  },
-  vwBtnCalc: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  tchCalc: (disabled) => ({
-    backgroundColor: disabled ? 'rgba(255,255,255,0.7)' : '#FFFFFF',
-    padding: 5,
-    paddingRight: 20,
-    paddingLeft: 20,
-    borderRadius: 20,
-    elevation: 3,
-  }),
-  txtTchCalc: (disabled) => ({
-    fontSize: 18,
-    color: disabled ? 'rgba(51,51,51,0.15)' : '#31949e',
-    fontWeight: 'bold',
-  }),
-  vwContentPie: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    elevation: 2,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  pieGraph: {
-    borderRadius: 100,
-  },
-  vwBackWhite: {
-    height: 170,
-    width: 170,
-    backgroundColor: '#FFFFFF',
-    position: 'absolute',
-    borderRadius: 85,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  txtCenterPrincipal: {
-    fontSize: 25,
-    color: '#31949e',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-});
 
 export default PrincipalScreen;
