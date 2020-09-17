@@ -7,29 +7,32 @@ import {
   TouchableHighlight,
   TextInput,
   ScrollView,
+  Animated,
 } from 'react-native';
 import IconIon from 'react-native-vector-icons/Ionicons';
 import IconMIC from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFA5 from 'react-native-vector-icons/FontAwesome5';
 import * as Progress from 'react-native-progress';
+// EXTERNAL COMPONENTS
+import FooterTable from '../components/FooterTable';
 // EXTERNAL SCRIPTS
 import {convertInputsIMC} from '../scripts/converters';
 // EXTERNAL STYLES
 import styles from '../styles/CalcScreen';
 
-const PrincipalScreen = (props) => {
+const PrincipalScreen = () => {
   const navigation = useNavigation();
 
   const [inpWeight, setInpWeight] = useState('');
   const [inpHeight, setInpHeight] = useState('');
   const [disabledCalc, setDisabledCalc] = useState(true);
-  const [resultIMC, setResultIMC] = useState(false);
+  const [resIMC, setResIMC] = useState(false);
   const [showResult, setShowResult] = useState(true);
   const [showRemoveIMC, setShowRemoveIMC] = useState(false);
-  const [checkedColor, setCheckedColor] = useState('');
-  const [showTable, setShowTable] = useState(true);
+  const [checkColor, setCheckColor] = useState('');
   const [showTxtTesult, setShowTxtResult] = useState(false);
-  const [txtResultFinal, setTxtResultFinal] = useState('');
+  const [txtResultFinal, setTxtResultFinal] = useState([]);
+  const [showInfoColor, setShowInfoColor] = useState(false);
 
   const convertNumbers = () => {
     let weight = Number(inpWeight.replace(',', '.'));
@@ -77,16 +80,41 @@ const PrincipalScreen = (props) => {
         ? ['#b30000', 'Obesidade']
         : ['#660000', 'Obesidade Grave'];
 
-    setCheckedColor(respfinal[0]);
-    setTxtResultFinal(respfinal[1]);
+    setCheckColor(respfinal[0]);
+    setTxtResultFinal([respfinal[0], respfinal[1]]);
+  };
+
+  const showTogether = () => {
+    setResIMC(false);
+    setShowResult(true);
+    setShowRemoveIMC(false);
+    setCheckColor('');
+    setShowTxtResult(false);
+    fadeOutColor();
+  };
+
+  const opacity = useState(new Animated.Value(0))[0];
+
+  const fadeInColor = () => {
+    setShowInfoColor(true);
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+  const fadeOutColor = () => {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowInfoColor(false);
+    });
   };
 
   useEffect(() => {
-    setResultIMC(false);
-    setShowResult(true);
-    setShowRemoveIMC(false);
-    setCheckedColor('');
-    setShowTxtResult(false);
+    showTogether();
     convertNumbers()[0] != 0 && convertNumbers()[1] != 0
       ? setDisabledCalc(false)
       : setDisabledCalc(true);
@@ -110,14 +138,8 @@ const PrincipalScreen = (props) => {
           />
         </TouchableHighlight>
       </View>
-      <ScrollView style={{width: '100%'}}>
-        <View
-          style={{
-            justifyContent: 'flex-start',
-            width: '100%',
-            alignItems: 'center',
-            flex: 1,
-          }}>
+      <ScrollView style={styles.svContent}>
+        <View style={styles.vwPrimaryBox}>
           <View style={styles.vwSuperiorBox}>
             <View style={styles.vwBoxInputs}>
               <View style={styles.vwBoxInput}>
@@ -133,8 +155,6 @@ const PrincipalScreen = (props) => {
                     maxLength={6}
                     keyboardType="numeric"
                     style={styles.inpWeight}
-                    onFocus={() => setShowTable(false)}
-                    onBlur={() => setShowTable(true)}
                     value={inpWeight}
                     onChangeText={(v) => setInpWeight(convertInputsIMC(v))}
                     placeholder="63,00"
@@ -166,8 +186,6 @@ const PrincipalScreen = (props) => {
                       onChangeText={(v) => setInpHeight(convertInputsIMC(v))}
                       keyboardType="numeric"
                       style={styles.inpWeight}
-                      onFocus={() => setShowTable(false)}
-                      onBlur={() => setShowTable(true)}
                       placeholder="1,73"
                       placeholderTextColor="rgba(0,0,0,0.2)"
                     />
@@ -185,14 +203,15 @@ const PrincipalScreen = (props) => {
             <View style={styles.vwBtnCalc}>
               <TouchableHighlight
                 onPress={() => {
-                  setResultIMC(true);
+                  setResIMC(true);
+                  fadeInColor();
                   setTimeout(() => {
                     setShowResult(false);
                     setShowRemoveIMC(true);
                     verifyColorFinal(IMCFinal().toFixed(2));
                     setDisabledCalc(true);
                     setShowTxtResult(true);
-                  }, 1000);
+                  }, 1050);
                 }}
                 disabled={disabledCalc}
                 underlayColor="none"
@@ -201,7 +220,7 @@ const PrincipalScreen = (props) => {
               </TouchableHighlight>
             </View>
 
-            {resultIMC && (
+            {resIMC && (
               <>
                 <View style={styles.vwBoxPie}>
                   <View style={styles.vwContentPie}>
@@ -230,12 +249,8 @@ const PrincipalScreen = (props) => {
                     {showRemoveIMC && (
                       <TouchableHighlight
                         onPress={() => {
-                          setResultIMC(false);
-                          setShowResult(true);
                           setDisabledCalc(false);
-                          setShowRemoveIMC(false);
-                          setCheckedColor('');
-                          setShowTxtResult(false);
+                          showTogether();
                         }}
                         underlayColor="none"
                         style={styles.btnRemoveIMC}>
@@ -246,27 +261,13 @@ const PrincipalScreen = (props) => {
                 </View>
 
                 {showTxtTesult && (
-                  <View
-                    style={{
-                      backgroundColor: '#31949e',
-                      alignSelf: 'center',
-                      marginTop: 10,
-                      marginBottom: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      padding: 7,
-                      elevation: 3,
-                      paddingRight: 15,
-                      paddingLeft: 15,
-                      borderRadius: 25,
-                    }}>
+                  <View style={styles.vwResultTxt}>
                     <Text
-                      style={{
-                        fontSize: 20,
-                        textAlign: 'center',
-                        color: '#FFFFFF',
-                      }}>
-                      {txtResultFinal}
+                      style={[
+                        styles.txtResultLabel(txtResultFinal[0]),
+                        styles.txtShadow,
+                      ]}>
+                      {txtResultFinal[1]}
                     </Text>
                   </View>
                 )}
@@ -276,54 +277,12 @@ const PrincipalScreen = (props) => {
         </View>
       </ScrollView>
 
-      {showTable && (
-        <View style={styles.vwTableInfo}>
-          <View style={styles.boxRowTable}>
-            <View style={styles.vwContentTable}>
-              <Text style={styles.txtTitleTable}>Cor</Text>
-              <View
-                style={styles.vwColorTable('#ff9999', checkedColor, resultIMC)}
-              />
-              <View
-                style={styles.vwColorTable('#ff4d4d', checkedColor, resultIMC)}
-              />
-              <View
-                style={styles.vwColorTable('#ff0000', checkedColor, resultIMC)}
-              />
-              <View
-                style={styles.vwColorTable('#b30000', checkedColor, resultIMC)}
-              />
-              <View
-                style={styles.vwColorTable('#660000', checkedColor, resultIMC)}
-              />
-            </View>
-            <View style={styles.vwContentTable}>
-              <Text style={styles.txtTitleTable}>IMC</Text>
-              <Text style={styles.txtTableInfos}>Menor que 18,5</Text>
-              <Text style={styles.txtTableInfos}>Entre 18,5 e 24,9</Text>
-              <Text style={styles.txtTableInfos}>Entre 25 e 29,9</Text>
-              <Text style={styles.txtTableInfos}>Entre 30 e 39,9</Text>
-              <Text style={styles.txtTableInfos}>Maior que 40</Text>
-            </View>
-            <View style={styles.vwContentTable}>
-              <Text style={styles.txtTitleTable}>Classificação</Text>
-              <Text style={styles.txtTableInfos}>Magreza</Text>
-              <Text style={styles.txtTableInfos}>Normal</Text>
-              <Text style={styles.txtTableInfos}>Sobrepeso</Text>
-              <Text style={styles.txtTableInfos}>Obesidade</Text>
-              <Text style={styles.txtTableInfos}>Obesidade Grave</Text>
-            </View>
-            <View style={styles.vwContentTable}>
-              <Text style={styles.txtTitleTable}>Obesidade</Text>
-              <Text style={styles.txtTableInfos}>0º</Text>
-              <Text style={styles.txtTableInfos}>0º</Text>
-              <Text style={styles.txtTableInfos}>1º</Text>
-              <Text style={styles.txtTableInfos}>2º</Text>
-              <Text style={styles.txtTableInfos}>3º</Text>
-            </View>
-          </View>
-        </View>
-      )}
+      <FooterTable
+        showInfoColor={showInfoColor}
+        checkColor={checkColor}
+        resIMC={resIMC}
+        opac={opacity}
+      />
     </SafeAreaView>
   );
 };

@@ -12,6 +12,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
+    borderBottomWidth: 1.5,
+    borderColor: 'rgba(49, 148, 158,0.1)',
   },
   txtHeaderPrincipal: {
     fontSize: 25,
@@ -28,9 +30,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   txtShadow: {
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowColor: 'rgba(0, 0, 0, 0.6)',
     textShadowOffset: {width: -0.5, height: 0.5},
-    textShadowRadius: 2,
+    textShadowRadius: 1,
   },
   vwBoxInputs: {
     flexDirection: 'row',
@@ -174,13 +176,9 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingLeft: 10,
     borderTopWidth: 1.5,
-    // borderRightWidth: 2,
-    // borderLeftWidth: 2,
     borderColor: 'rgba(49, 148, 158,0.1)',
     justifyContent: 'center',
     alignItems: 'center',
-    // borderTopRightRadius: 15,
-    // borderTopLeftRadius: 15,
     backgroundColor: '#FFFFFF',
   },
   boxRowTable: {
@@ -193,7 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  vwColorTable: (cor, check, res) => ({
+  vwColorTab: (cor, check, res) => ({
     height: 19.5,
     width: 19.5,
     marginBottom: 2,
@@ -215,6 +213,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  svContent: {
+    width: '100%',
+  },
+  vwPrimaryBox: {
+    justifyContent: 'flex-start',
+    width: '100%',
+    alignItems: 'center',
+    flex: 1,
+  },
+  vwResultTxt: {
+    alignSelf: 'center',
+    marginBottom: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 7,
+    paddingRight: 15,
+    paddingLeft: 15,
+    borderRadius: 25,
+  },
+  txtResultLabel: (cor) => ({
+    fontSize: 25,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: cor,
+  }),
 });
 
 export default styles;
