@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   txtTopIcon: {
-    color: '#FFFFFF',
+    color: '#31949e',
     fontWeight: 'bold',
   },
   inpWeight: {
@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#FFFFFF',
     borderWidth: 3,
-    borderColor: '#1d6970',
+    borderColor: '#31949e',
     textAlign: 'center',
-    color: '#1d6970',
+    color: '#31949e',
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -63,16 +63,20 @@ const styles = StyleSheet.create({
   txtRightInside: {
     fontSize: 17,
     marginLeft: 2,
-    color: '#FFFFFF',
+    color: '#31949e',
     fontWeight: 'bold',
   },
   vwBoxIcon: {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  iconSup: {
+    marginBottom: 3,
+    marginTop: 3,
+  },
   vwSuperiorBox: {
     padding: 10,
-    backgroundColor: '#31949e',
+    backgroundColor: '#FFFFFF',
     width: '85%',
     borderRadius: 10,
     paddingBottom: 15,
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   tchCalc: (disabled) => ({
-    backgroundColor: disabled ? 'rgba(255,255,255,0.7)' : '#FFFFFF',
+    backgroundColor: disabled ? 'rgba(255,255,255,0.7)' : '#31949e',
     padding: 5,
     paddingRight: 20,
     paddingLeft: 20,
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
   }),
   txtTchCalc: (disabled) => ({
     fontSize: 18,
-    color: disabled ? 'rgba(51,51,51,0.15)' : '#31949e',
+    color: disabled ? 'rgba(51,51,51,0.15)' : '#FFFFFF',
     fontWeight: 'bold',
   }),
   vwContentPie: {
@@ -139,7 +143,7 @@ const styles = StyleSheet.create({
     paddingBottom: 1,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#1d6970',
+    borderColor: '#31949e',
     position: 'absolute',
     right: -3,
     top: 0,
@@ -147,7 +151,7 @@ const styles = StyleSheet.create({
   txtNumberHeight: {
     fontSize: 7,
     fontWeight: 'bold',
-    color: '#1d6970',
+    color: '#31949e',
   },
   vwBoxPie: {
     justifyContent: 'center',
@@ -163,6 +167,53 @@ const styles = StyleSheet.create({
     bottom: 35,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  vwTableInfo: {
+    height: 200,
+    width: '100%',
+    paddingRight: 10,
+    paddingLeft: 10,
+    borderTopWidth: 1.5,
+    // borderRightWidth: 2,
+    // borderLeftWidth: 2,
+    borderColor: 'rgba(49, 148, 158,0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // borderTopRightRadius: 15,
+    // borderTopLeftRadius: 15,
+    backgroundColor: '#FFFFFF',
+  },
+  boxRowTable: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: '100%',
+  },
+  vwContentTable: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  vwColorTable: (cor, check, res) => ({
+    height: 19.5,
+    width: 19.5,
+    marginBottom: 2,
+    marginTop: 2,
+    borderRadius: 15,
+    backgroundColor: cor,
+    borderWidth: res && cor != check ? 4 : 0,
+    borderColor: 'transparent',
+  }),
+  txtTitleTable: {
+    fontWeight: 'bold',
+    color: '#31949e',
+    fontSize: 17,
+    marginBottom: 10,
+  },
+  txtTableInfos: {
+    marginBottom: 2,
+    marginTop: 2,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });
 
