@@ -55,7 +55,7 @@ export default StyleSheet.create({
     height: 55,
     width: dms,
     marginBottom: 10,
-    marginTop: 10,
+    marginTop: 5,
     borderRadius: 15,
     backgroundColor: 'transparent',
     justifyContent: 'center',

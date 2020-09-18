@@ -6,6 +6,7 @@ import {
   FlatList,
   Dimensions,
   TouchableHighlight,
+  ScrollView,
 } from 'react-native';
 import IconF from 'react-native-vector-icons/FontAwesome';
 import IconMat from 'react-native-vector-icons/MaterialIcons';
@@ -14,6 +15,7 @@ import Lottie from 'lottie-react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
+import LinearGradient from 'react-native-linear-gradient';
 // EXTERNAL COMPONENTS
 import BottomAlert from '../components/BottomAlert';
 import ModalConfig from '../components/ModalConfig';
@@ -228,8 +230,7 @@ const PrincipalScreen = () => {
         {/* HEADER */}
         <HeaderPage title="Controle de Água" />
         {/* CONTAINER PIE */}
-        <View
-          style={styles.vwContentPrincipal}>
+        <View style={styles.vwContentPrincipal}>
           <TouchableHighlight
             underlayColor="none"
             onPress={() => setShowConfig(true)}
@@ -283,15 +284,37 @@ const PrincipalScreen = () => {
         </View>
       </View>
 
-      <FlatList
-        initialNumToRender={8}
-        maxToRenderPerBatch={2}
-        contentContainerStyle={styles.ftlHistory(haveHistory)}
-        data={myData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        ListEmptyComponent={EmptyComponent}
-      />
+      <View style={{flex: 1, paddingTop: 10, paddingBottom: 10}}>
+        <LinearGradient
+          style={{
+            position: 'absolute',
+            top: 0,
+            elevation: 1,
+            width: '100%',
+            height: 20,
+          }}
+          colors={['#FFFFFF', '#FFFFFF', 'transparent']}
+        />
+        <LinearGradient
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            elevation: 1,
+            width: '100%',
+            height: 20,
+          }}
+          colors={['transparent', '#FFFFFF', '#FFFFFF']}
+        />
+        <FlatList
+          initialNumToRender={8}
+          maxToRenderPerBatch={2}
+          contentContainerStyle={styles.ftlHistory(haveHistory)}
+          data={myData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={EmptyComponent}
+        />
+      </View>
     </SafeAreaView>
   );
 };
