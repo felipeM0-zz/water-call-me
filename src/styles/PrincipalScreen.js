@@ -7,7 +7,8 @@ export default StyleSheet.create({
     textShadowRadius: 1,
   },
   vwContentPrincipal: {
-    height: 350,
+    paddingTop: 40,
+    paddingBottom: 60,
     width: '85%',
     borderRadius: 10,
     justifyContent: 'center',
@@ -16,8 +17,8 @@ export default StyleSheet.create({
   },
   iconGear: {
     position: 'absolute',
-    left: 0,
-    top: 0,
+    right: 0,
+    top: 10,
     justifyContent: 'center',
     alignItems: 'center',
     height: 40,
@@ -34,7 +35,7 @@ export default StyleSheet.create({
   },
   txtHistory: {
     fontSize: 18,
-    color: '#FFFFFF',
+    color: '#31949e',
     marginRight: 3,
   },
   vwBackWhite: {
@@ -48,20 +49,18 @@ export default StyleSheet.create({
   },
   txtCenterPrincipal: {
     fontSize: 25,
-    color: '#92E4ED',
+    color: '#31949e',
   },
   vwHistory: (dms) => ({
     height: 55,
     width: dms,
     marginBottom: 10,
     marginTop: 10,
-    borderRadius: 2,
+    borderRadius: 15,
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 3,
-    borderColor: '#31949e',
-    backgroundColor: '#47bdc9',
+    backgroundColor: '#31949e',
   }),
   txtContentHistory: {
     fontSize: 17,
@@ -69,12 +68,11 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   vwWater: {
-    height: 413,
+    height: 355,
     alignItems: 'center',
   },
   savContent: {
     flex: 1,
-    // backgroundColor: '#474747',
     backgroundColor: '#FFFFFF',
   },
   ftlHistory: (hst) => ({
@@ -95,15 +93,13 @@ export default StyleSheet.create({
   },
   vwTxtCount: {
     position: 'absolute',
-    right: 0.2,
-    backgroundColor: '#31949e',
-    paddingRight: 6,
-    paddingLeft: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: '#FFFFFF',
-    bottom: -2,
-    borderTopLeftRadius: 15,
+    right: 1,
+    backgroundColor: '#1d7c85',
+    paddingRight: 9,
+    paddingLeft: 9,
+    bottom: 0,
+    borderTopLeftRadius: 10,
+    borderBottomRightRadius: 15,
   },
   txtCount: {
     fontSize: 10,

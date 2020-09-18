@@ -11,24 +11,23 @@ import IconF from 'react-native-vector-icons/FontAwesome';
 import IconMat from 'react-native-vector-icons/MaterialIcons';
 import * as Progress from 'react-native-progress';
 import Lottie from 'lottie-react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-community/async-storage';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
+// EXTERNAL COMPONENTS
 import BottomAlert from '../components/BottomAlert';
 import ModalConfig from '../components/ModalConfig';
-import styles from '../styles/PrincipalScreen';
 import HeaderPage from '../components/HeaderPage';
+// EXTERNAL STYLES
+import styles from '../styles/PrincipalScreen';
 
 const PrincipalScreen = () => {
   const dmsion = Dimensions.get('screen').width;
-
   const [valueNow, setValueNow] = useState(1500);
   const [valueObj, setValueObj] = useState(2500);
   const [valueIncrement, setValueIncrement] = useState(200);
   const [haveHistory, setHaveHistory] = useState(true);
   const [myData, setMydata] = useState([]);
-
   const [waterFull, setWaterFull] = useState(false);
   const [timeDrink, setTimeDrink] = useState(false);
   const [cleaningHistory, setCleaningHistory] = useState(false);
@@ -229,8 +228,7 @@ const PrincipalScreen = () => {
         {/* HEADER */}
         <HeaderPage title="Controle de Água" />
         {/* CONTAINER PIE */}
-        <LinearGradient
-          colors={['#47bdc9', '#92E4ED', '#92E4ED', '#47bdc9']}
+        <View
           style={styles.vwContentPrincipal}>
           <TouchableHighlight
             underlayColor="none"
@@ -239,7 +237,7 @@ const PrincipalScreen = () => {
             <IconF
               name="gear"
               size={25}
-              color="#FFFFFF"
+              color="#31949e"
               style={styles.txtShadow}
             />
           </TouchableHighlight>
@@ -249,7 +247,7 @@ const PrincipalScreen = () => {
               progress={valueNow / valueObj}
               borderWidth={0}
               size={190}
-              color="rgba(146, 228, 237,0.6)"
+              color="#31949e"
               style={styles.pieGraph}
             />
             <View style={styles.vwBackWhite}>
@@ -275,14 +273,14 @@ const PrincipalScreen = () => {
                   <IconMat
                     name="layers-clear"
                     size={20}
-                    color="#FFFFFF"
+                    color="#31949e"
                     style={styles.txtShadow}
                   />
                 </>
               </TouchableHighlight>
             </>
           )}
-        </LinearGradient>
+        </View>
       </View>
 
       <FlatList
