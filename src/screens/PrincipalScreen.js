@@ -7,9 +7,7 @@ import {
   Dimensions,
   TouchableHighlight,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import IconF from 'react-native-vector-icons/FontAwesome';
-import IconIon from 'react-native-vector-icons/Ionicons';
 import IconMat from 'react-native-vector-icons/MaterialIcons';
 import * as Progress from 'react-native-progress';
 import Lottie from 'lottie-react-native';
@@ -20,9 +18,9 @@ import moment from 'moment';
 import BottomAlert from '../components/BottomAlert';
 import ModalConfig from '../components/ModalConfig';
 import styles from '../styles/PrincipalScreen';
+import HeaderPage from '../components/HeaderPage';
 
 const PrincipalScreen = () => {
-  const navigation = useNavigation();
   const dmsion = Dimensions.get('screen').width;
 
   const [valueNow, setValueNow] = useState(1500);
@@ -229,22 +227,7 @@ const PrincipalScreen = () => {
 
       <View style={styles.vwWater}>
         {/* HEADER */}
-        <View style={styles.headerPrincipal}>
-          <Text style={[styles.txtHeaderPrincipal, styles.txtShadow]}>
-            Controle de Água
-          </Text>
-          <TouchableHighlight
-            underlayColor="none"
-            onPress={() => navigation.openDrawer()}
-            style={styles.tchHeaderMenu}>
-            <IconIon
-              style={styles.txtShadow}
-              name="menu"
-              size={30}
-              color="#92E4ED"
-            />
-          </TouchableHighlight>
-        </View>
+        <HeaderPage title="Controle de Água" />
         {/* CONTAINER PIE */}
         <LinearGradient
           colors={['#47bdc9', '#92E4ED', '#92E4ED', '#47bdc9']}

@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
@@ -15,14 +14,14 @@ import IconFA5 from 'react-native-vector-icons/FontAwesome5';
 import * as Progress from 'react-native-progress';
 // EXTERNAL COMPONENTS
 import FooterTable from '../components/FooterTable';
+import HeaderPage from '../components/HeaderPage';
+import PiesIMC from '../components/PiesIMC';
 // EXTERNAL SCRIPTS
 import {convertInputsIMC} from '../scripts/converters';
 // EXTERNAL STYLES
 import styles from '../styles/CalcScreen';
 
-const PrincipalScreen = () => {
-  const navigation = useNavigation();
-
+const CalcScreen = () => {
   const [inpWeight, setInpWeight] = useState('');
   const [inpHeight, setInpHeight] = useState('');
   const [disabledCalc, setDisabledCalc] = useState(true);
@@ -33,6 +32,7 @@ const PrincipalScreen = () => {
   const [showTxtTesult, setShowTxtResult] = useState(false);
   const [txtResultFinal, setTxtResultFinal] = useState([]);
   const [showInfoColor, setShowInfoColor] = useState(false);
+  const opacity = useState(new Animated.Value(0))[0];
 
   const convertNumbers = () => {
     let weight = Number(inpWeight.replace(',', '.'));
@@ -42,28 +42,6 @@ const PrincipalScreen = () => {
 
   const IMCFinal = () => {
     return convertNumbers()[0] / (convertNumbers()[1] * convertNumbers()[1]);
-  };
-
-  const PiesIMC = () => {
-    let colors = ['#660000', '#b30000', '#ff0000', '#ff4d4d', '#ff9999'];
-    let sizes = [0.4, 0.399, 0.299, 0.249, 0.185];
-    let pies = [];
-
-    for (let i = 0; i < colors.length; i++) {
-      pies.push(
-        <Progress.Pie
-          progress={sizes[i]}
-          borderWidth={0}
-          size={160}
-          unfilledColor={colors[i] == '#660000' ? '#660000' : ''}
-          color={colors[i]}
-          style={[styles.pieGraph, {position: 'absolute'}]}
-          key={i}
-        />,
-      );
-    }
-
-    return pies;
   };
 
   const verifyColorFinal = (result) => {
@@ -93,8 +71,6 @@ const PrincipalScreen = () => {
     fadeOutColor();
   };
 
-  const opacity = useState(new Animated.Value(0))[0];
-
   const fadeInColor = () => {
     setShowInfoColor(true);
     Animated.timing(opacity, {
@@ -122,25 +98,13 @@ const PrincipalScreen = () => {
 
   return (
     <SafeAreaView style={styles.vwContent}>
-      <View style={styles.headerPrincipal}>
-        <Text style={[styles.txtHeaderPrincipal, styles.txtShadow]}>
-          Cálculo IMC
-        </Text>
-        <TouchableHighlight
-          underlayColor="none"
-          onPress={() => navigation.openDrawer()}
-          style={styles.tchHeaderMenu}>
-          <IconIon
-            style={styles.txtShadow}
-            name="menu"
-            size={30}
-            color="#31949e"
-          />
-        </TouchableHighlight>
-      </View>
+      {/* HEADER */}
+      <HeaderPage title="Cálculo IMC" />
+      {/* CONTAINER */}
       <ScrollView style={styles.svContent}>
         <View style={styles.vwPrimaryBox}>
           <View style={styles.vwSuperiorBox}>
+            {/* INPUTS */}
             <View style={styles.vwBoxInputs}>
               <View style={styles.vwBoxInput}>
                 <View style={styles.vwBoxIcon}>
@@ -199,7 +163,7 @@ const PrincipalScreen = () => {
                 </View>
               </View>
             </View>
-
+            {/* BTN CALCULAR */}
             <View style={styles.vwBtnCalc}>
               <TouchableHighlight
                 onPress={() => {
@@ -287,4 +251,4 @@ const PrincipalScreen = () => {
   );
 };
 
-export default PrincipalScreen;
+export default CalcScreen;

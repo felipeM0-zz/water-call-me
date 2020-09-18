@@ -1,23 +1,9 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
-  headerPrincipal: {
-    height: 60,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  txtHeaderPrincipal: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    width: '100%',
-    textAlign: 'center',
-    color: '#7bcbd4',
-  },
   txtShadow: {
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: {width: -0.8, height: 0.8},
+    textShadowColor: 'rgba(0, 0, 0, 0.6)',
+    textShadowOffset: {width: -0.5, height: 0.5},
     textShadowRadius: 1,
   },
   vwContentPrincipal: {
@@ -90,13 +76,6 @@ export default StyleSheet.create({
     flex: 1,
     // backgroundColor: '#474747',
     backgroundColor: '#FFFFFF',
-  },
-  tchHeaderMenu: {
-    width: 60,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
   },
   ftlHistory: (hst) => ({
     flex: hst ? 0 : 1,
